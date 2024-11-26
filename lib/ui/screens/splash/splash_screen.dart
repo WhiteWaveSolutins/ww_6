@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:scan_doc/data/services/shared_preferences_service.dart';
-import 'package:scan_doc/ui/screens/main/main_screen.dart';
+import 'package:scan_doc/ui/screens/bottom_tab_bar/bottom_tab_bar.dart';
 import 'package:scan_doc/ui/screens/onboarding/onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (!status) SharedPreferencesService.switchStatusShowOnboarding();
     Navigator.of(context).pushAndRemoveUntil(
       PageRouteBuilder(
-        pageBuilder: (_, __, ___) => !status ? const MainScreen() : const OnboardingScreen(),
+        pageBuilder: (_, __, ___) => status ? const BottomTabBar() : const OnboardingScreen(),
       ),
       (Route<dynamic> route) => false,
     );

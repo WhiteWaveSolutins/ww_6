@@ -58,7 +58,17 @@ class OnboardingWidget extends StatelessWidget {
             ],
           ),
         ),
-        Padding(
+        Container(
+          decoration:  BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [
+                Colors.transparent,
+                AppColors.black.withOpacity(0.9),
+              ],
+            ),
+          ),
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [

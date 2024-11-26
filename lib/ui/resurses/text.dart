@@ -18,7 +18,7 @@ class AppText {
 
   static TextStyle h2 = GoogleFonts.hind(
     fontSize: 24,
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.w600,
     color: AppColors.textPrimary,
   );
 
@@ -54,7 +54,7 @@ class AppText {
 
   static TextStyle text3 = GoogleFonts.hind(
     fontSize: 12,
-    fontWeight: FontWeight.w600,
+    fontWeight: FontWeight.w500,
     color: AppColors.textPrimary,
   );
 

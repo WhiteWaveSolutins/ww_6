@@ -39,6 +39,7 @@ dependencies:
   url_launcher:
   json_serializable: ^6.8.0
   sqlite3_flutter_libs: ^0.5.10
+  carousel_slider: ^5.0.0
   flagsmith: ^6.0.0
 
 dev_dependencies:
@@ -68,3 +69,4 @@ flutter:
     - assets/icons/
     - assets/logo/
     - assets/images/
+    - assets/images/folders/

@@ -1,14 +1,14 @@
 class AppImages {
-  static const logo = 'assets/logo/icon.png';
-  static const logo2 = 'assets/logo/logo2.png';
   static const onboarding1 = 'assets/images/onboarding1.png';
   static const onboarding2 = 'assets/images/onboarding2.png';
   static const onboarding3 = 'assets/images/onboarding3.png';
   static const onboarding4 = 'assets/images/onboarding4.png';
-  static const mainBack = 'assets/images/main-back.png';
-  static const back = 'assets/images/back.png';
-  static const pict = 'assets/images/pict.png';
-  static const faceOnboarding = 'assets/images/face-onboarding.png';
-  static const almaz = 'assets/images/almaz.png';
-  static const scanner = 'assets/images/scaner-logo.png';
+  static const mainBack = 'assets/images/background.png';
+  static const password = 'assets/images/password.png';
+  static const about = 'assets/images/about.png';
+  static const terms = 'assets/images/terms.png';
+  static const privacy = 'assets/images/privacy.png';
+  static const version = 'assets/images/version.png';
+  static const support = 'assets/images/support.png';
+  static const rate = 'assets/images/rate.png';
 }

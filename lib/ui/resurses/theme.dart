@@ -37,8 +37,8 @@ final lightThemeData = ThemeData(
   ),
   inputDecorationTheme: InputDecorationTheme(
     floatingLabelBehavior: FloatingLabelBehavior.always,
-    hintStyle: AppText.text2.copyWith(
-      color: AppColors.white.withOpacity(.5),
+    hintStyle: AppText.text16.copyWith(
+      color: Colors.white.withOpacity(0.5),
     ),
     filled: true,
     fillColor: AppColors.white.withOpacity(.2),
