@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gaimon/gaimon.dart';
 import 'package:scan_doc/domain/di/get_it_services.dart';
 import 'package:scan_doc/ui/resurses/colors.dart';
 import 'package:scan_doc/ui/resurses/text.dart';
@@ -170,7 +171,10 @@ class BottomOnboarding extends StatelessWidget {
       children: [
         SimpleButton(
           title: buttonText,
-          onPressed: onTapButton,
+          onPressed: (){
+            Gaimon.selection();
+            onTapButton();
+          },
         ),
         const SizedBox(height: 24),
         Padding(
@@ -206,17 +210,18 @@ class BottomOnboarding extends StatelessWidget {
                   ),
                 ),
               ),
-              CupertinoButton(
-                padding: EdgeInsets.zero,
-                minSize: 1,
-                onPressed: () {},
-                child: Text(
-                  'Restore',
-                  style: AppText.text2bold.copyWith(
-                    color: Colors.white.withOpacity(0.5),
-                  ),
-                ),
-              ),
+              //TODO: HIDE PREMIUM
+              //CupertinoButton(
+              //  padding: EdgeInsets.zero,
+              //  minSize: 1,
+              //  onPressed: () {},
+              //  child: Text(
+              //    'Restore',
+              //    style: AppText.text2bold.copyWith(
+              //      color: Colors.white.withOpacity(0.5),
+              //    ),
+              //  ),
+              //),
             ],
           ),
         ),

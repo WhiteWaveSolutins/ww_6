@@ -6,10 +6,10 @@ class AppColors {
   static const textPrimary = Colors.white;
 
   static const green = Color(0xFF40B0A3);
-  static const blue = Color(0xFF256EFF);
+  static const blue = Color(0xFF0A84FF);
   static const blueLight = Color(0xFFE3ECFF);
   static const yellow = Color(0xFFFFC531);
-  static const red = Color(0xFFD30404);
+  static const red = Color(0xFFD61D20);
   static const orange = Color(0xFFF25A19);
 
   static const grey = Color(0xFF434140);

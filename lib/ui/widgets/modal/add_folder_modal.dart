@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gaimon/gaimon.dart';
+import 'package:scan_doc/domain/di/get_it_services.dart';
 import 'package:scan_doc/ui/resurses/colors.dart';
 import 'package:scan_doc/ui/resurses/text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -17,13 +18,26 @@ class _AddFolderModalState extends State<AddFolderModal> {
   int folder = 1;
   bool usePassword = false;
   final nameController = TextEditingController();
+  bool isLoading = false;
 
-  void save() {
+  void save() async {
     if (nameController.text.isEmpty) {
       showAppToast('Enter name');
       return;
     }
-    Navigator.of(context).pop();
+    setState(() => isLoading = true);
+    final isAdd = await getItService.folderUseCase.addFolder(
+      name: nameController.text,
+      image: folder,
+      havePassword: usePassword,
+    );
+    setState(() => isLoading = false);
+    if (isAdd) {
+      Gaimon.success();
+      Navigator.of(context).pop();
+    } else {
+      Gaimon.error();
+    }
   }
 
   @override
@@ -71,40 +85,45 @@ class _AddFolderModalState extends State<AddFolderModal> {
                     ),
                   ),
                   CarouselSlider(
-                      items: [
-                        for (int i = 0; i < 9; i++)
-                          Stack(
-                            alignment: Alignment.topRight,
-                            children: [
-                              Container(
-                                width: 150,
-                                height: 150,
-                                padding: const EdgeInsets.all(25),
-                                child: Image.asset(
-                                  'assets/images/folders/folder${i + 1}.png',
-                                  width: 100,
-                                  height: 100,
-                                ),
+                    items: [
+                      for (int i = 0; i < 9; i++)
+                        Stack(
+                          alignment: Alignment.topRight,
+                          children: [
+                            Container(
+                              width: 150,
+                              height: 150,
+                              padding: const EdgeInsets.all(25),
+                              child: Image.asset(
+                                'assets/images/folders/folder${i + 1}.png',
+                                width: 100,
+                                height: 100,
                               ),
-                              //if (i > 2)
-                              //  const SvgIcon(
-                              //    icon: AppIcons.pro,
-                              //    size: 50,
-                              //  ),
-                            ],
-                          ),
-                      ],
-                      options: CarouselOptions(
-                        height: 150,
-                        aspectRatio: 16 / 9,
-                        viewportFraction: 0.4,
-                        initialPage: 0,
-                        enableInfiniteScroll: false,
-                        enlargeCenterPage: true,
-                        enlargeFactor: 0.3,
-                        onPageChanged: (index, _) => folder = index + 1,
-                        scrollDirection: Axis.horizontal,
-                      )),
+                            ),
+                            //TODO: HIDE PREMIUM
+                            //if (i > 2)
+                            //  const SvgIcon(
+                            //    icon: AppIcons.pro,
+                            //    size: 50,
+                            //  ),
+                          ],
+                        ),
+                    ],
+                    options: CarouselOptions(
+                      height: 150,
+                      aspectRatio: 16 / 9,
+                      viewportFraction: 0.4,
+                      initialPage: 0,
+                      enableInfiniteScroll: false,
+                      enlargeCenterPage: true,
+                      enlargeFactor: 0.3,
+                      onPageChanged: (index, _) {
+                        Gaimon.selection();
+                        folder = index + 1;
+                      },
+                      scrollDirection: Axis.horizontal,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 40),
@@ -136,6 +155,7 @@ class _AddFolderModalState extends State<AddFolderModal> {
                                 style: AppText.text3,
                               ),
                             ),
+                            //TODO: HIDE PREMIUM
                             //const Positioned(
                             //  right: 0,
                             //  child: Padding(
@@ -165,6 +185,7 @@ class _AddFolderModalState extends State<AddFolderModal> {
                           children: [
                             CupertinoButton(
                               onPressed: () {
+                                if (isLoading) return;
                                 Gaimon.selection();
                                 save();
                               },
@@ -173,6 +194,7 @@ class _AddFolderModalState extends State<AddFolderModal> {
                                 height: 60,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
+                                  //TODO: HIDE PREMIUM
                                   //border: Border.all(
                                   //  color: AppColors.primaryGrad1,
                                   //),
@@ -184,12 +206,20 @@ class _AddFolderModalState extends State<AddFolderModal> {
                                     ],
                                   ),
                                 ),
-                                child: const Icon(
-                                  CupertinoIcons.checkmark_alt,
-                                  color: Colors.white,
-                                ),
+                                child: isLoading
+                                    ? const Center(
+                                        child: CupertinoActivityIndicator(
+                                          color: Colors.white,
+                                          radius: 10,
+                                        ),
+                                      )
+                                    : const Icon(
+                                        CupertinoIcons.checkmark_alt,
+                                        color: Colors.white,
+                                      ),
                               ),
                             ),
+                            //TODO: HIDE PREMIUM
                             //const SvgIcon(
                             //  icon: AppIcons.pro,
                             //  size: 50,

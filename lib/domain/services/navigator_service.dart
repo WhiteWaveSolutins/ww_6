@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:scan_doc/data/models/document.dart';
+import 'package:scan_doc/data/models/folder.dart';
 import 'package:scan_doc/route.dart';
 
 class NavigatorService {
@@ -16,4 +18,27 @@ class NavigatorService {
         AppRoutes.main,
         (Route<dynamic> route) => false,
       );
+
+  void onGetPremium() => navigatorKey.currentState!.pushNamed(AppRoutes.getPremium);
+
+  void onSaveDocument({required String image}) {
+    navigatorKey.currentState!.pushNamed(
+      AppRoutes.saveDocument,
+      arguments: AppRouterArguments(image: image),
+    );
+  }
+
+  void onFolder({required Folder folder}) {
+    navigatorKey.currentState!.pushNamed(
+      AppRoutes.folder,
+      arguments: AppRouterArguments(folder: folder),
+    );
+  }
+
+  void onSuccessfullyDocument({required Document document}) {
+    navigatorKey.currentState!.pushNamed(
+      AppRoutes.successfullyDocument,
+      arguments: AppRouterArguments(document: document),
+    );
+  }
 }

@@ -60,7 +60,7 @@ class AppText {
 
   static TextStyle small = GoogleFonts.hind(
     fontSize: 10,
-    fontWeight: FontWeight.w500,
+    fontWeight: FontWeight.w700,
     color: AppColors.textPrimary,
   );
 }

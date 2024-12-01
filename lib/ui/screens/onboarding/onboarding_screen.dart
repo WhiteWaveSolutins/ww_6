@@ -20,7 +20,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:ImageBack(
+      body: ImageBack(
         image: AppImages.mainBack,
         child: SafeArea(
           child: page == 0
@@ -63,7 +63,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           ),
                           title: 'Editing\ndocuments',
                           subtitle: 'Change filters, add text and captions and more',
-                          onTapButton: () => setState(() => page = 3),
+                          onTapButton: () {
+                            getItService.navigatorService.onMain();
+                            return;
+                            //TODO: HIDE PREMIUM
+                            //setState(() => page = 3);
+                          },
                         )
                       : OnboardingWidget(
                           index: 3,
@@ -81,7 +86,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             Gaimon.selection();
                             getItService.navigatorService.onMain();
                           },
-                          onTapButton: () {},
+                          onTapButton: getItService.navigatorService.onGetPremium,
                         ),
         ),
       ),

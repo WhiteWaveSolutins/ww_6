@@ -38,22 +38,23 @@ final lightThemeData = ThemeData(
   inputDecorationTheme: InputDecorationTheme(
     floatingLabelBehavior: FloatingLabelBehavior.always,
     hintStyle: AppText.text16.copyWith(
-      color: Colors.white.withOpacity(0.5),
+      height: 1,
+      color: Colors.white.withOpacity(0.3),
     ),
     filled: true,
-    fillColor: AppColors.white.withOpacity(.2),
+    fillColor: AppColors.white.withOpacity(.1),
     border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(30),
     ),
     enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(30),
       borderSide: const BorderSide(
         width: 1,
         color: AppColors.black,
       ),
     ),
     focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(30),
     ),
     contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
   ),

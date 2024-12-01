@@ -1,6 +1,8 @@
+import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gaimon/gaimon.dart';
+import 'package:scan_doc/domain/di/get_it_services.dart';
 import 'package:scan_doc/ui/resurses/colors.dart';
 import 'package:scan_doc/ui/resurses/icons.dart';
 import 'package:scan_doc/ui/screens/main/main_screen.dart';
@@ -22,7 +24,7 @@ final profileNavKey = GlobalKey<NavigatorState>();
 class _BottomTabBarState extends State<BottomTabBar> {
   int _currentIndex = 0;
 
-  void goToTab(int index) {
+  void goToTab(int index) async {
     _currentIndex = index;
     setState(() {});
   }
@@ -110,22 +112,34 @@ class BottomBarWidget extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            width: 70,
-            height: 70,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              gradient: const LinearGradient(
-                colors: [
-                  AppColors.primaryGrad1,
-                  AppColors.primaryGrad2,
-                ],
+          GestureDetector(
+            onTap: () async {
+              Gaimon.selection();
+              final image = await CunningDocumentScanner.getPictures(
+                noOfPages: 1,
+                isGalleryImportAllowed: true,
+              );
+              if ((image ?? []).isNotEmpty) {
+                getItService.navigatorService.onSaveDocument(image: image!.first);
+              }
+            },
+            child: Container(
+              width: 70,
+              height: 70,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                gradient: const LinearGradient(
+                  colors: [
+                    AppColors.primaryGrad1,
+                    AppColors.primaryGrad2,
+                  ],
+                ),
               ),
-            ),
-            padding: const EdgeInsets.all(10),
-            child: const SvgIcon(
-              icon: AppIcons.scan,
-              size: 50,
+              padding: const EdgeInsets.all(10),
+              child: const SvgIcon(
+                icon: AppIcons.scan,
+                size: 50,
+              ),
             ),
           ),
         ],

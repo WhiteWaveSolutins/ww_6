@@ -13,6 +13,8 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
+	<key>NSCameraUsageDescription</key>
+    <string>The camera is needed to scan documents</string>
 	<string>scan_doc</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
