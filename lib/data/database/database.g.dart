@@ -747,8 +747,14 @@ class $DocumentTableTable extends DocumentTable
   late final drift.GeneratedColumn<String> name = drift.GeneratedColumn<String>(
       'name', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const drift.VerificationMeta _createdMeta =
+      const drift.VerificationMeta('created');
   @override
-  List<drift.GeneratedColumn> get $columns => [id, name];
+  late final drift.GeneratedColumn<DateTime> created =
+      drift.GeneratedColumn<DateTime>('created', aliasedName, false,
+          type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  @override
+  List<drift.GeneratedColumn> get $columns => [id, name, created];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -769,6 +775,12 @@ class $DocumentTableTable extends DocumentTable
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
+    if (data.containsKey('created')) {
+      context.handle(_createdMeta,
+          created.isAcceptableOrUnknown(data['created']!, _createdMeta));
+    } else if (isInserting) {
+      context.missing(_createdMeta);
+    }
     return context;
   }
 
@@ -782,6 +794,8 @@ class $DocumentTableTable extends DocumentTable
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       name: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      created: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
     );
   }
 
@@ -795,12 +809,15 @@ class DocumentTableData extends drift.DataClass
     implements drift.Insertable<DocumentTableData> {
   final int id;
   final String name;
-  const DocumentTableData({required this.id, required this.name});
+  final DateTime created;
+  const DocumentTableData(
+      {required this.id, required this.name, required this.created});
   @override
   Map<String, drift.Expression> toColumns(bool nullToAbsent) {
     final map = <String, drift.Expression>{};
     map['id'] = drift.Variable<int>(id);
     map['name'] = drift.Variable<String>(name);
+    map['created'] = drift.Variable<DateTime>(created);
     return map;
   }
 
@@ -808,6 +825,7 @@ class DocumentTableData extends drift.DataClass
     return DocumentTableCompanion(
       id: drift.Value(id),
       name: drift.Value(name),
+      created: drift.Value(created),
     );
   }
 
@@ -817,6 +835,7 @@ class DocumentTableData extends drift.DataClass
     return DocumentTableData(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
+      created: serializer.fromJson<DateTime>(json['created']),
     );
   }
   @override
@@ -825,17 +844,21 @@ class DocumentTableData extends drift.DataClass
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
+      'created': serializer.toJson<DateTime>(created),
     };
   }
 
-  DocumentTableData copyWith({int? id, String? name}) => DocumentTableData(
+  DocumentTableData copyWith({int? id, String? name, DateTime? created}) =>
+      DocumentTableData(
         id: id ?? this.id,
         name: name ?? this.name,
+        created: created ?? this.created,
       );
   DocumentTableData copyWithCompanion(DocumentTableCompanion data) {
     return DocumentTableData(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
+      created: data.created.present ? data.created.value : this.created,
     );
   }
 
@@ -843,47 +866,58 @@ class DocumentTableData extends drift.DataClass
   String toString() {
     return (StringBuffer('DocumentTableData(')
           ..write('id: $id, ')
-          ..write('name: $name')
+          ..write('name: $name, ')
+          ..write('created: $created')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name);
+  int get hashCode => Object.hash(id, name, created);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is DocumentTableData &&
           other.id == this.id &&
-          other.name == this.name);
+          other.name == this.name &&
+          other.created == this.created);
 }
 
 class DocumentTableCompanion extends drift.UpdateCompanion<DocumentTableData> {
   final drift.Value<int> id;
   final drift.Value<String> name;
+  final drift.Value<DateTime> created;
   const DocumentTableCompanion({
     this.id = const drift.Value.absent(),
     this.name = const drift.Value.absent(),
+    this.created = const drift.Value.absent(),
   });
   DocumentTableCompanion.insert({
     this.id = const drift.Value.absent(),
     required String name,
-  }) : name = drift.Value(name);
+    required DateTime created,
+  })  : name = drift.Value(name),
+        created = drift.Value(created);
   static drift.Insertable<DocumentTableData> custom({
     drift.Expression<int>? id,
     drift.Expression<String>? name,
+    drift.Expression<DateTime>? created,
   }) {
     return drift.RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
+      if (created != null) 'created': created,
     });
   }
 
   DocumentTableCompanion copyWith(
-      {drift.Value<int>? id, drift.Value<String>? name}) {
+      {drift.Value<int>? id,
+      drift.Value<String>? name,
+      drift.Value<DateTime>? created}) {
     return DocumentTableCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
+      created: created ?? this.created,
     );
   }
 
@@ -896,6 +930,9 @@ class DocumentTableCompanion extends drift.UpdateCompanion<DocumentTableData> {
     if (name.present) {
       map['name'] = drift.Variable<String>(name.value);
     }
+    if (created.present) {
+      map['created'] = drift.Variable<DateTime>(created.value);
+    }
     return map;
   }
 
@@ -903,7 +940,8 @@ class DocumentTableCompanion extends drift.UpdateCompanion<DocumentTableData> {
   String toString() {
     return (StringBuffer('DocumentTableCompanion(')
           ..write('id: $id, ')
-          ..write('name: $name')
+          ..write('name: $name, ')
+          ..write('created: $created')
           ..write(')'))
         .toString();
   }
@@ -1378,11 +1416,13 @@ typedef $$DocumentTableTableCreateCompanionBuilder = DocumentTableCompanion
     Function({
   drift.Value<int> id,
   required String name,
+  required DateTime created,
 });
 typedef $$DocumentTableTableUpdateCompanionBuilder = DocumentTableCompanion
     Function({
   drift.Value<int> id,
   drift.Value<String> name,
+  drift.Value<DateTime> created,
 });
 
 class $$DocumentTableTableFilterComposer
@@ -1399,6 +1439,9 @@ class $$DocumentTableTableFilterComposer
 
   drift.ColumnFilters<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => drift.ColumnFilters(column));
+
+  drift.ColumnFilters<DateTime> get created => $composableBuilder(
+      column: $table.created, builder: (column) => drift.ColumnFilters(column));
 }
 
 class $$DocumentTableTableOrderingComposer
@@ -1415,6 +1458,10 @@ class $$DocumentTableTableOrderingComposer
 
   drift.ColumnOrderings<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => drift.ColumnOrderings(column));
+
+  drift.ColumnOrderings<DateTime> get created => $composableBuilder(
+      column: $table.created,
+      builder: (column) => drift.ColumnOrderings(column));
 }
 
 class $$DocumentTableTableAnnotationComposer
@@ -1431,6 +1478,9 @@ class $$DocumentTableTableAnnotationComposer
 
   drift.GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
+
+  drift.GeneratedColumn<DateTime> get created =>
+      $composableBuilder(column: $table.created, builder: (column) => column);
 }
 
 class $$DocumentTableTableTableManager extends drift.RootTableManager<
@@ -1462,18 +1512,22 @@ class $$DocumentTableTableTableManager extends drift.RootTableManager<
           updateCompanionCallback: ({
             drift.Value<int> id = const drift.Value.absent(),
             drift.Value<String> name = const drift.Value.absent(),
+            drift.Value<DateTime> created = const drift.Value.absent(),
           }) =>
               DocumentTableCompanion(
             id: id,
             name: name,
+            created: created,
           ),
           createCompanionCallback: ({
             drift.Value<int> id = const drift.Value.absent(),
             required String name,
+            required DateTime created,
           }) =>
               DocumentTableCompanion.insert(
             id: id,
             name: name,
+            created: created,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) =>

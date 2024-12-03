@@ -18,6 +18,8 @@
 	<string>scan_doc</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>NSFaceIDUsageDescription</key>
+    <string>Face ID for unlocking</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>

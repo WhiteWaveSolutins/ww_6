@@ -88,7 +88,10 @@ class _MainScreenState extends State<MainScreen> {
               selected: (v) => setState(() => byDate = v),
             ),
             FoldersList(search: searchController.text),
-            const DocumentsList(),
+            DocumentsList(
+              search: searchController.text,
+              sortByDate: byDate,
+            ),
           ],
         ),
       ),

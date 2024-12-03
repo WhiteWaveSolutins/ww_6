@@ -18,10 +18,14 @@ import 'package:scan_doc/ui/widgets/svg_icon.dart';
 
 class DocumentsList extends StatelessWidget {
   final Folder? folder;
+  final bool sortByDate;
+  final String search;
 
   const DocumentsList({
     super.key,
     this.folder,
+    this.sortByDate = true,
+    this.search = '',
   });
 
   @override
@@ -39,15 +43,61 @@ class DocumentsList extends StatelessWidget {
         StoreConnector<AppState, DocumentListState>(
           converter: (store) => store.state.documentListState,
           builder: (context, state) {
-            if (state.isLoading) return const _State(isLoading: true);
+            if (state.isLoading) {
+              return const _State(
+                isLoading: true,
+                isSearch: false,
+              );
+            }
             if (state.isError) return Text(state.errorMessage);
             final documents = state.documents.where((e) {
               if (folder == null) return e.folders.isEmpty;
               return e.folders.contains(folder!.id);
             }).toList();
-            if (documents.isEmpty) return const _State(isLoading: false);
+
+            if (search.isNotEmpty) {
+              documents.removeWhere((e) => !e.name.startsWith(search));
+            }
+
+            if (sortByDate) {
+              documents.sort((a, b) => a.created.compareTo(b.created));
+            } else {
+              documents.sort((a, b) => a.name.compareTo(b.name));
+            }
+
+            if (documents.isEmpty) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (folder != null) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      '0 docs',
+                      style: AppText.text16.copyWith(
+                        color: Colors.white.withOpacity(.3),
+                      ),
+                    ),
+                  ],
+                  _State(
+                    isLoading: false,
+                    isSearch: search.isNotEmpty,
+                  ),
+                ],
+              );
+            }
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (folder != null) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    '${documents.length} docs',
+                    style: AppText.text16.copyWith(
+                      color: Colors.white.withOpacity(.3),
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+                ],
                 const SizedBox(height: 8),
                 GridView.builder(
                   physics: const NeverScrollableScrollPhysics(),
@@ -84,7 +134,7 @@ class DocumentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => getItService.navigatorService.onSuccessfullyDocument(
+      onTap: () => getItService.navigatorService.onDocument(
         document: document,
       ),
       child: Stack(
@@ -214,10 +264,12 @@ class _More extends StatelessWidget {
 
 class _State extends StatelessWidget {
   final bool isLoading;
+  final bool isSearch;
 
   const _State({
     super.key,
     required this.isLoading,
+    required this.isSearch,
   });
 
   @override
@@ -242,13 +294,13 @@ class _State extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  const SvgIcon(
-                    icon: AppIcons.file,
+                  SvgIcon(
+                    icon: isSearch ? AppIcons.noSearch : AppIcons.file,
                     size: 25,
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'There are no documents here yet',
+                    isSearch ? 'Nothing found' : 'There are no documents here yet',
                     style: AppText.small.copyWith(
                       color: Colors.white.withOpacity(.3),
                     ),

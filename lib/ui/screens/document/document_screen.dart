@@ -3,39 +3,38 @@ import 'dart:io';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:gaimon/gaimon.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:scan_doc/data/models/document.dart';
 import 'package:scan_doc/domain/di/get_it_services.dart';
 import 'package:scan_doc/ui/resurses/colors.dart';
 import 'package:scan_doc/ui/resurses/icons.dart';
 import 'package:scan_doc/ui/resurses/images.dart';
-import 'package:scan_doc/ui/resurses/utils.dart';
 import 'package:scan_doc/ui/screens/save_document/widgets/documents_columns.dart';
 import 'package:scan_doc/ui/screens/save_document/widgets/documents_grid.dart';
 import 'package:scan_doc/ui/screens/save_document/widgets/rename_modal.dart';
-import 'package:scan_doc/ui/state_manager/store.dart';
 import 'package:scan_doc/ui/widgets/buttons/close_button.dart';
 import 'package:scan_doc/ui/widgets/buttons/simple_button.dart';
 import 'package:scan_doc/ui/widgets/image_back.dart';
 import 'package:scan_doc/ui/widgets/svg_icon.dart';
 import 'package:path/path.dart' as p;
 
-class SaveDocumentScreen extends StatefulWidget {
-  final String image;
+class DocumentScreen extends StatefulWidget {
+  final Document document;
 
-  const SaveDocumentScreen({
+  const DocumentScreen({
     super.key,
-    required this.image,
+    required this.document,
   });
 
   @override
-  State<SaveDocumentScreen> createState() => _SaveDocumentScreenState();
+  State<DocumentScreen> createState() => _DocumentScreenState();
 }
 
-class _SaveDocumentScreenState extends State<SaveDocumentScreen> {
+class _DocumentScreenState extends State<DocumentScreen> {
   bool isColumn = true;
   bool isDeleting = false;
+  bool isEdit = false;
   bool isLoading = false;
   late Directory? directory;
   late String name;
@@ -46,11 +45,9 @@ class _SaveDocumentScreenState extends State<SaveDocumentScreen> {
   @override
   void initState() {
     super.initState();
-    docs.add(widget.image);
+    docs.addAll(widget.document.paths);
     directory = null;
-    final store = StoreProvider.of<AppState>(context,listen: false);
-    final len = store.state.documentListState.documents.length+1;
-    name = '${convertDate(date: DateTime.now())}. Document $len';
+    name = widget.document.name;
     getApplicationDocumentsDirectory().then(
       (v) {
         directory = v;
@@ -109,6 +106,10 @@ class _SaveDocumentScreenState extends State<SaveDocumentScreen> {
   }
 
   void onClose() {
+    if (!isEdit) {
+      Navigator.of(context).pop();
+      return;
+    }
     showDialog(
       context: context,
       useRootNavigator: true,
@@ -142,17 +143,21 @@ class _SaveDocumentScreenState extends State<SaveDocumentScreen> {
 
   void onSave() async {
     if (directory == null) return;
+    if (!isEdit) {
+      setState(() => isEdit = true);
+      return;
+    }
     setState(() => isLoading = true);
     final paths = docs.map((e) => p.join(directory!.path, e)).toList();
-    final document = await getItService.documentUseCase.addDocument(
+    final document = await getItService.documentUseCase.editDocument(
+      id: widget.document.id,
       name: name,
       paths: paths,
     );
     setState(() => isLoading = false);
-    if (document != null) {
+    if (document) {
       Gaimon.success();
       getItService.navigatorService.onPop();
-      getItService.navigatorService.onSuccessfullyDocument(document: document);
     } else {
       Gaimon.error();
     }
@@ -205,22 +210,23 @@ class _SaveDocumentScreenState extends State<SaveDocumentScreen> {
                                 width: 100,
                                 child: SimpleButton(
                                   isLoading: isLoading,
-                                  title: 'Save',
+                                  title: !isEdit ? 'Edit' : 'Save',
                                   onPressed: onSave,
                                 ),
                               ),
                             ],
                           ),
-                          _Type(
-                            isColumn: isColumn,
-                            onSet: (v) {
-                              if (v != isColumn) {
-                                Gaimon.selection();
-                                isDeleting = false;
-                                setState(() => isColumn = v);
-                              }
-                            },
-                          ),
+                          if (isEdit)
+                            _Type(
+                              isColumn: isColumn,
+                              onSet: (v) {
+                                if (v != isColumn) {
+                                  Gaimon.selection();
+                                  isDeleting = false;
+                                  setState(() => isColumn = v);
+                                }
+                              },
+                            ),
                         ],
                       ),
               ),
@@ -233,6 +239,7 @@ class _SaveDocumentScreenState extends State<SaveDocumentScreen> {
                       onRename: onRename,
                       images: docs,
                       nameDoc: name,
+                      isEdit: isEdit,
                       onAdd: onAdd,
                       directory: directory!,
                       onDelete: onDelete,

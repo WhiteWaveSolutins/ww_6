@@ -27,6 +27,21 @@ class DocumentUseCase {
     return document;
   }
 
+  Future<bool> editDocument({
+    required int id,
+    required String name,
+    required List<String> paths,
+  }) async {
+    final document = await documentRepository.editDocument(
+      id: id,
+      name: name,
+      paths: paths,
+    );
+    store.dispatch(LoadDocumentListAction());
+    if (!document) showAppToast('Failed to edit document');
+    return document;
+  }
+
   Future<void> deleteDocument({required int documentId}) async {
     store.dispatch(DeleteDocumentListAction(documentId: documentId));
     await documentRepository.deleteDocument(documentId: documentId);

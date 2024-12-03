@@ -1,5 +1,7 @@
 import 'package:redux/redux.dart';
+import 'package:scan_doc/data/models/folder.dart';
 import 'package:scan_doc/domain/repositories/folder_repository.dart';
+import 'package:scan_doc/ui/state_manager/document/action.dart';
 import 'package:scan_doc/ui/state_manager/folder/action.dart';
 import 'package:scan_doc/ui/state_manager/store.dart';
 import 'package:scan_doc/ui/widgets/toast/app_toast.dart';
@@ -13,7 +15,7 @@ class FolderUseCase {
     required this.store,
   });
 
-  Future<bool> addFolder({
+  Future<Folder?> addFolder({
     required String name,
     required int image,
     required bool havePassword,
@@ -28,6 +30,33 @@ class FolderUseCase {
     } else {
       store.dispatch(AddFolderListAction(folder: newFolder));
     }
-    return newFolder != null;
+    return newFolder;
+  }
+
+  Future<Folder?> editFolder({
+    required String name,
+    required int image,
+    required bool havePassword,
+    required int folderId,
+  }) async {
+    final newFolder = await folderRepository.editFolder(
+      name: name,
+      image: image,
+      havePassword: havePassword,
+      folderId: folderId,
+    );
+    if (newFolder == null) {
+      showAppToast('Failed to edit folder');
+    } else {
+      store.dispatch(LoadFolderListAction());
+    }
+    return newFolder;
+  }
+
+  Future<bool> deleteFolder({required int folderId}) async {
+    final status = await folderRepository.deleteFolder(folderId: folderId);
+    store.dispatch(LoadFolderListAction());
+    store.dispatch(LoadDocumentListAction());
+    return status;
   }
 }

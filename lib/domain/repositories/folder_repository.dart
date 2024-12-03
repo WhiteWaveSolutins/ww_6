@@ -9,5 +9,12 @@ abstract class FolderRepository {
     required bool havePassword,
   });
 
+  Future<Folder?> editFolder({
+    required String name,
+    required int image,
+    required bool havePassword,
+    required int folderId,
+  });
+
   Future<bool> deleteFolder({required int folderId});
 }

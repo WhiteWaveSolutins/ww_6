@@ -13,4 +13,6 @@ class AppIcons {
   static const doubleCheck = 'assets/icons/double_check.svg';
   static const import = 'assets/icons/import.svg';
   static const returnI = 'assets/icons/return.svg';
+  static const noSearch = 'assets/icons/no_search.svg';
+  static const faceId = 'assets/icons/face-id.svg';
 }

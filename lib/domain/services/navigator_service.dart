@@ -8,7 +8,7 @@ class NavigatorService {
 
   NavigatorService({required this.navigatorKey});
 
-  void onPop() => navigatorKey.currentState!.pop();
+  dynamic onPop({bool? status}) => navigatorKey.currentState!.pop(status);
 
   bool canPop() => navigatorKey.currentState!.canPop();
 
@@ -35,9 +35,44 @@ class NavigatorService {
     );
   }
 
+  Future<dynamic> onInfoPassword({required Function() onOpen}) {
+    return navigatorKey.currentState!.pushNamed(
+      AppRoutes.infoPassword,
+      arguments: AppRouterArguments(function: onOpen),
+    );
+  }
+
+  Future<dynamic> onPassword({
+    required Function() onOpen,
+    String? password,
+    String? title,
+  }) {
+    onPop();
+    return navigatorKey.currentState!.pushNamed(
+      AppRoutes.password,
+      arguments: AppRouterArguments(
+        function: onOpen,
+        text: password,
+        title: title,
+      ),
+    );
+  }
+
+  void onSettingPassword() {
+    onPop();
+    navigatorKey.currentState!.pushNamed(AppRoutes.settingPassword);
+  }
+
   void onSuccessfullyDocument({required Document document}) {
     navigatorKey.currentState!.pushNamed(
       AppRoutes.successfullyDocument,
+      arguments: AppRouterArguments(document: document),
+    );
+  }
+
+  void onDocument({required Document document}) {
+    navigatorKey.currentState!.pushNamed(
+      AppRoutes.document,
       arguments: AppRouterArguments(document: document),
     );
   }

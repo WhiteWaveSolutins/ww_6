@@ -40,7 +40,9 @@ class SettingsScreen extends StatelessWidget {
                         _Item(
                           title: 'Password',
                           icon: AppImages.password,
-                          onTap: () {},
+                          onTap: () => getItService.navigatorService.onInfoPassword(
+                            onOpen: getItService.navigatorService.onSettingPassword,
+                          ),
                         ),
                       ],
                     ),

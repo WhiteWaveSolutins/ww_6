@@ -19,6 +19,7 @@ class DocumentsColumns extends StatefulWidget {
   final Function() onRename;
   final Directory directory;
   final String nameDoc;
+  final bool isEdit;
 
   const DocumentsColumns({
     super.key,
@@ -29,6 +30,7 @@ class DocumentsColumns extends StatefulWidget {
     required this.onDelete,
     required this.onReplace,
     required this.nameDoc,
+    this.isEdit = true,
   });
 
   @override
@@ -61,32 +63,33 @@ class _DocumentsColumnsState extends State<DocumentsColumns> {
                     ),
                   ),
                 ),
-              GestureDetector(
-                onTap: widget.onAdd,
-                child: Container(
-                  width: 370,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(.1),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Center(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: AppColors.primaryGrad1,
-                          width: 2,
+              if (widget.isEdit)
+                GestureDetector(
+                  onTap: widget.onAdd,
+                  child: Container(
+                    width: 370,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(.1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Center(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: AppColors.primaryGrad1,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.white.withOpacity(.1),
                         ),
-                        borderRadius: BorderRadius.circular(30),
-                        color: Colors.white.withOpacity(.1),
-                      ),
-                      padding: const EdgeInsets.all(30),
-                      child: GradientWidget.primary(
-                        const Icon(CupertinoIcons.plus),
+                        padding: const EdgeInsets.all(30),
+                        child: GradientWidget.primary(
+                          const Icon(CupertinoIcons.plus),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
             ],
             options: CarouselOptions(
               height: double.infinity,
@@ -111,21 +114,25 @@ class _DocumentsColumnsState extends State<DocumentsColumns> {
                 widget.nameDoc,
                 style: AppText.text16,
               ),
-              GestureDetector(
-                onTap: widget.onRename,
-                child: const SvgIcon(icon: AppIcons.edit),
+              Opacity(
+                opacity: widget.isEdit ? 1 : 0,
+                child: GestureDetector(
+                  onTap: widget.isEdit ? widget.onRename : null,
+                  child: const SvgIcon(icon: AppIcons.edit),
+                ),
               ),
             ],
           ),
         ),
         const SizedBox(height: 20),
-        Opacity(
-          opacity: selectedIndex == widget.images.length ? 0 : 1,
-          child: _Buttons(
-            onDelete: () => widget.onDelete(selectedIndex),
-            onReplace: () => widget.onReplace(selectedIndex),
+        if (widget.isEdit)
+          Opacity(
+            opacity: selectedIndex == widget.images.length ? 0 : 1,
+            child: _Buttons(
+              onDelete: () => widget.onDelete(selectedIndex),
+              onReplace: () => widget.onReplace(selectedIndex),
+            ),
           ),
-        ),
       ],
     );
   }

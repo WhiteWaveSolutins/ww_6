@@ -29,7 +29,7 @@ void _log(String message) {
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     final dbFolder = await getApplicationDocumentsDirectory();
-    final file = File(p.join(dbFolder.path, 'database2'));
+    final file = File(p.join(dbFolder.path, 'database3'));
     return NativeDatabase(file);
   });
 }
@@ -46,7 +46,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   //Folders
   Future<List<Folder>?> getListFolder() async {
@@ -81,9 +81,37 @@ class AppDataBase extends _$AppDataBase {
     }
   }
 
+  Future<Folder?> editFolder({
+    required String name,
+    required int image,
+    required bool havePassword,
+    required int folderId,
+  }) async {
+    try {
+      final companion = FolderTableCompanion(
+        name: drift.Value(name),
+        image: drift.Value(image),
+        havePassword: drift.Value(havePassword),
+      );
+      await (update(folderTable)..where((tbl) => tbl.id.isIn([folderId]))).write(companion);
+      _log('Edit Folder $name');
+      return Folder(
+        imageIndex: image,
+        name: name,
+        havePassword: havePassword,
+        id: folderId,
+      );
+    } catch (e) {
+      _log('Error Edit Folder $name');
+      _log(e.toString());
+      return null;
+    }
+  }
+
   Future<bool> deleteFolder({required int folderId}) async {
     try {
       await (delete(folderTable)..where((t) => t.id.isIn([folderId]))).go();
+      await (delete(folderDocumentTable)..where((t) => t.folderId.isIn([folderId]))).go();
       _log('Delete Folder $folderId');
       return true;
     } catch (_) {
@@ -147,6 +175,7 @@ class AppDataBase extends _$AppDataBase {
     try {
       final documentCompanion = DocumentTableCompanion(
         name: drift.Value(name),
+        created: drift.Value(DateTime.now()),
       );
       final id = await into(documentTable).insert(documentCompanion);
       for (var path in paths) {
@@ -162,6 +191,33 @@ class AppDataBase extends _$AppDataBase {
     } catch (_) {
       _log('Error Add document $name');
       return null;
+    }
+  }
+
+  Future<bool> editDocument({
+    required int documentId,
+    required String name,
+    required List<String> paths,
+  }) async {
+    try {
+      final companion = DocumentTableCompanion(
+        name: drift.Value(name),
+        created: drift.Value(DateTime.now()),
+      );
+      await (update(documentTable)..where((tbl) => tbl.id.isIn([documentId]))).write(companion);
+      await (delete(documentPathTable)..where((t) => t.documentId.isIn([documentId]))).go();
+      for (var path in paths) {
+        final pathCompanion = DocumentPathTableCompanion(
+          documentId: drift.Value(documentId),
+          path: drift.Value(path),
+        );
+        await into(documentPathTable).insert(pathCompanion);
+      }
+      _log('Edit document $name');
+      return true;
+    } catch (_) {
+      _log('Error Edit document $name');
+      return false;
     }
   }
 

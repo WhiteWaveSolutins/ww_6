@@ -8,6 +8,12 @@ abstract class DocumentRepository {
     required List<String> paths,
   });
 
+  Future<bool> editDocument({
+    required String name,
+    required List<String> paths,
+    required int id,
+  });
+
   Future<bool> deleteDocument({required int documentId});
 
   Future<bool> deleteFolderDocument({

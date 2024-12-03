@@ -24,5 +24,20 @@ class LocalFolderRepository implements FolderRepository {
   }
 
   @override
+  Future<Folder?> editFolder({
+    required String name,
+    required int image,
+    required bool havePassword,
+    required int folderId,
+  }) {
+    return database.editFolder(
+      name: name,
+      image: image,
+      havePassword: havePassword,
+      folderId: folderId,
+    );
+  }
+
+  @override
   Future<bool> deleteFolder({required int folderId}) => database.deleteFolder(folderId: folderId);
 }

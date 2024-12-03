@@ -22,6 +22,19 @@ class LocalDocumentRepository implements DocumentRepository {
   }
 
   @override
+  Future<bool> editDocument({
+    required String name,
+    required List<String> paths,
+    required int id,
+  }) {
+    return database.editDocument(
+      name: name,
+      paths: paths,
+      documentId: id,
+    );
+  }
+
+  @override
   Future<bool> deleteDocument({required int documentId}) =>
       database.deleteDocument(documentId: documentId);
 

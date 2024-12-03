@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gaimon/gaimon.dart';
+import 'package:scan_doc/data/models/folder.dart';
+import 'package:scan_doc/data/services/shared_preferences_service.dart';
 import 'package:scan_doc/domain/di/get_it_services.dart';
 import 'package:scan_doc/ui/resurses/colors.dart';
 import 'package:scan_doc/ui/resurses/text.dart';
@@ -8,7 +10,14 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:scan_doc/ui/widgets/toast/app_toast.dart';
 
 class AddFolderModal extends StatefulWidget {
-  const AddFolderModal({super.key});
+  final Folder? folder;
+  final Function(Folder)? setFolder;
+
+  const AddFolderModal({
+    super.key,
+    this.folder,
+    this.setFolder,
+  });
 
   @override
   State<AddFolderModal> createState() => _AddFolderModalState();
@@ -20,20 +29,43 @@ class _AddFolderModalState extends State<AddFolderModal> {
   final nameController = TextEditingController();
   bool isLoading = false;
 
+  @override
+  void initState() {
+    super.initState();
+    if (widget.folder != null) {
+      folder = widget.folder!.imageIndex;
+      nameController.text = widget.folder!.name;
+      usePassword = widget.folder!.havePassword;
+    }
+  }
+
   void save() async {
     if (nameController.text.isEmpty) {
       showAppToast('Enter name');
       return;
     }
     setState(() => isLoading = true);
-    final isAdd = await getItService.folderUseCase.addFolder(
-      name: nameController.text,
-      image: folder,
-      havePassword: usePassword,
-    );
+    late Folder? newFolder;
+    newFolder = null;
+    if (widget.folder != null) {
+      newFolder = await getItService.folderUseCase.editFolder(
+        name: nameController.text,
+        image: folder,
+        havePassword: usePassword,
+        folderId: widget.folder!.id,
+      );
+    } else {
+      newFolder = await getItService.folderUseCase.addFolder(
+        name: nameController.text,
+        image: folder,
+        havePassword: usePassword,
+      );
+    }
+
     setState(() => isLoading = false);
-    if (isAdd) {
+    if (newFolder != null) {
       Gaimon.success();
+      widget.setFolder?.call(newFolder);
       Navigator.of(context).pop();
     } else {
       Gaimon.error();
@@ -69,7 +101,7 @@ class _AddFolderModalState extends State<AddFolderModal> {
               ),
               const SizedBox(height: 16),
               Text(
-                'New folder',
+                widget.folder == null ? 'New folder' : 'Edit folder',
                 style: AppText.text2bold,
               ),
               const SizedBox(height: 24),
@@ -113,7 +145,7 @@ class _AddFolderModalState extends State<AddFolderModal> {
                       height: 150,
                       aspectRatio: 16 / 9,
                       viewportFraction: 0.4,
-                      initialPage: 0,
+                      initialPage: folder - 1,
                       enableInfiniteScroll: false,
                       enlargeCenterPage: true,
                       enlargeFactor: 0.3,
@@ -171,7 +203,21 @@ class _AddFolderModalState extends State<AddFolderModal> {
                         CupertinoSwitch(
                           activeColor: AppColors.primaryGrad1,
                           trackColor: AppColors.white.withOpacity(0.2),
-                          onChanged: (_) => setState(() => usePassword = !usePassword),
+                          onChanged: (_) async {
+                            if (!usePassword) {
+                              final password = await SharedPreferencesService.getPassword();
+                              if (password == null) {
+                                getItService.navigatorService.onInfoPassword(
+                                  onOpen: () {
+                                    setState(() => usePassword = true);
+                                    Navigator.of(context).pop();
+                                  },
+                                );
+                                return;
+                              }
+                            }
+                            setState(() => usePassword = !usePassword);
+                          },
                           value: usePassword,
                         ),
                       ],

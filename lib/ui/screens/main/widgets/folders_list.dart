@@ -67,7 +67,18 @@ class FolderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => getItService.navigatorService.onFolder(folder: folder),
+      onTap: () {
+        if (folder.havePassword) {
+          getItService.navigatorService.onInfoPassword(
+            onOpen: () {
+              getItService.navigatorService.onFirst();
+              getItService.navigatorService.onFolder(folder: folder);
+            },
+          );
+        } else {
+          getItService.navigatorService.onFolder(folder: folder);
+        }
+      },
       child: Column(
         children: [
           Image.asset(
