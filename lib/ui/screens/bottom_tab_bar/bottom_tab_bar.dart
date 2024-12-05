@@ -2,6 +2,7 @@ import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gaimon/gaimon.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:scan_doc/domain/di/get_it_services.dart';
 import 'package:scan_doc/ui/resurses/colors.dart';
 import 'package:scan_doc/ui/resurses/icons.dart';
@@ -114,6 +115,11 @@ class BottomBarWidget extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () async {
+              var status = await Permission.camera.status;
+              if (status.isDenied) {
+                final newStatus = await Permission.camera.request();
+                if (newStatus.isDenied) return;
+              }
               Gaimon.selection();
               final image = await CunningDocumentScanner.getPictures(
                 noOfPages: 1,
