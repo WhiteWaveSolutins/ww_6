@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scan_doc/data/models/document.dart';
 import 'package:scan_doc/data/models/folder.dart';
 import 'package:scan_doc/ui/screens/bottom_tab_bar/bottom_tab_bar.dart';
+import 'package:scan_doc/ui/screens/costomize_document/costomize_document_screen.dart';
 import 'package:scan_doc/ui/screens/document/document_screen.dart';
 import 'package:scan_doc/ui/screens/folder/folder_screen.dart';
 import 'package:scan_doc/ui/screens/get_premium/get_premium_screen.dart';
@@ -20,6 +21,7 @@ class AppRoutes {
   static const getPremium = '/get-premium';
   static const saveDocument = '/save-document';
   static const document = '/document';
+  static const costomizeDocument = '/costomize-document';
   static const successfullyDocument = '/successfully-document';
 
   static MaterialPageRoute onGenerateRoute(RouteSettings settings) {
@@ -28,6 +30,9 @@ class AppRoutes {
     final routes = <String, WidgetBuilder>{
       AppRoutes.main: (BuildContext context) => const BottomTabBar(),
       AppRoutes.infoPassword: (BuildContext context) => InfoPasswordScreen(onOpen: arg!.function!),
+      AppRoutes.costomizeDocument: (BuildContext context) => CostomizeDocumentScreen(
+            image: arg!.image!,
+          ),
       AppRoutes.document: (BuildContext context) => DocumentScreen(document: arg!.document!),
       AppRoutes.password: (BuildContext context) => PasswordScreen(
             onOpen: arg!.function!,

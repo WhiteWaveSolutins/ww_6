@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gaimon/gaimon.dart';
+import 'package:scan_doc/domain/di/get_it_services.dart';
 import 'package:scan_doc/ui/resurses/colors.dart';
 import 'package:scan_doc/ui/resurses/icons.dart';
 import 'package:scan_doc/ui/resurses/text.dart';
@@ -131,6 +132,9 @@ class _DocumentsColumnsState extends State<DocumentsColumns> {
             child: _Buttons(
               onDelete: () => widget.onDelete(selectedIndex),
               onReplace: () => widget.onReplace(selectedIndex),
+              onEdit: () => getItService.navigatorService.onCostomizeDocument(
+                image: widget.images[selectedIndex],
+              ),
             ),
           ),
       ],
@@ -141,11 +145,13 @@ class _DocumentsColumnsState extends State<DocumentsColumns> {
 class _Buttons extends StatelessWidget {
   final Function() onDelete;
   final Function() onReplace;
+  final Function() onEdit;
 
   const _Buttons({
     super.key,
     required this.onDelete,
     required this.onReplace,
+    required this.onEdit,
   });
 
   @override
@@ -169,16 +175,19 @@ class _Buttons extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 8),
-        Container(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(.1),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          padding: const EdgeInsets.all(20),
-          child: const SvgIcon(
-            icon: AppIcons.edit,
+        GestureDetector(
+          onTap: onEdit,
+          child: Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(.1),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            padding: const EdgeInsets.all(20),
+            child: const SvgIcon(
+              icon: AppIcons.edit,
+            ),
           ),
         ),
         const SizedBox(width: 8),

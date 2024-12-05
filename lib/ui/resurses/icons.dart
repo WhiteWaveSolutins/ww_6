@@ -15,4 +15,5 @@ class AppIcons {
   static const returnI = 'assets/icons/return.svg';
   static const noSearch = 'assets/icons/no_search.svg';
   static const faceId = 'assets/icons/face-id.svg';
+  static const cut = 'assets/icons/cut.svg';
 }

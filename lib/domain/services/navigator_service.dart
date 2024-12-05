@@ -70,6 +70,13 @@ class NavigatorService {
     );
   }
 
+  void onCostomizeDocument({required String image}) {
+    navigatorKey.currentState!.pushNamed(
+      AppRoutes.costomizeDocument,
+      arguments: AppRouterArguments(image: image),
+    );
+  }
+
   void onDocument({required Document document}) {
     navigatorKey.currentState!.pushNamed(
       AppRoutes.document,
