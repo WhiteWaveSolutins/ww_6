@@ -1027,11 +1027,12 @@ packages:
   pro_image_editor:
     dependency: "direct main"
     description:
-      name: pro_image_editor
-      sha256: "175c22e4ca1df810b5ddccf216bf69a7791f591973d462ccf52a73e3c053f181"
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.1.6"
+      path: "."
+      ref: HEAD
+      resolved-ref: "5f859c4c145cfb7e8a89bbaf35eb4c9db6b64637"
+      url: "https://github.com/Asl20015/pro_image_editor2.git"
+    source: git
+    version: "6.2.0"
   provider:
     dependency: "direct main"
     description:

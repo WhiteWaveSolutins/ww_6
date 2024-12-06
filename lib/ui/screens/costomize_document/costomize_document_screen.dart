@@ -1,14 +1,13 @@
 import 'dart:io';
-import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:pro_image_editor/models/custom_widgets/utils/custom_widgets_typedef.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:scan_doc/ui/resurses/colors.dart';
 import 'package:scan_doc/ui/resurses/icons.dart';
+import 'package:scan_doc/ui/resurses/images.dart';
 import 'package:scan_doc/ui/resurses/text.dart';
-import 'package:scan_doc/ui/screens/costomize_document/widgets/filter_button.dart';
+import 'package:scan_doc/ui/screens/costomize_document/widgets/crop_editor.dart';
 import 'package:scan_doc/ui/screens/costomize_document/widgets/filter_editor.dart';
 import 'package:scan_doc/ui/widgets/svg_icon.dart';
 
@@ -25,68 +24,64 @@ class CostomizeDocumentScreen extends StatelessWidget {
     return Scaffold(
       body: ProImageEditor.file(
         File(image),
+        imageBack: AppImages.mainBack,
         callbacks: ProImageEditorCallbacks(
           onImageEditingComplete: (Uint8List bytes) async {
             Navigator.pop(context);
           },
         ),
+        appBarWidgetCrop: const AppBarEditor(
+          title: 'Cut',
+          icon: AppIcons.cut,
+        ),
         configs: ProImageEditorConfigs(
           tuneEditorConfigs: const TuneEditorConfigs(enabled: false),
           blurEditorConfigs: const BlurEditorConfigs(enabled: false),
           filterEditorConfigs: const FilterEditorConfigs(),
+          icons: const ImageEditorIcons(
+            cropRotateEditor: IconsCropRotateEditor(bottomNavBar: Icons.abc),
+          ),
           customWidgets: ImageEditorCustomWidgets(
             filterEditor: appFilerEditor,
-            cropRotateEditor: CustomWidgetsCropRotateEditor(
-              appBar: (state, stream) {
-                return ReactiveCustomAppbar(
-                  builder: (BuildContext context) {
-                    return PreferredSize(
-                      preferredSize: const Size.fromHeight(150),
-                      child: Stack(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16),
-                            child: Center(
-                              child: Container(
-                                width: 60,
-                                height: 60,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: Colors.white.withOpacity(.1),
-                                ),
-                                padding: EdgeInsets.all(16),
-                                child: SvgIcon(icon: AppIcons.cut),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  stream: stream,
-                );
-              },
-              bottomBar: (state, stream) {
-                return ReactiveCustomWidget(
-                  builder: (BuildContext context) {
-                    return Padding(
-                      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 30),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ButtonCloseFilter(onTap: state.close),
-                          ButtonCheckFilter(onTap: state.done),
-                        ],
-                      ),
-                    );
-                  },
-                  stream: stream,
-                );
-              },
-            ),
+            cropRotateEditor: cropEditor,
           ),
         ),
       ),
+    );
+  }
+}
+
+class AppBarEditor extends StatelessWidget {
+  final String icon;
+  final String title;
+
+  const AppBarEditor({
+    super.key,
+    required this.title,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 60,
+          height: 60,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.white.withOpacity(.1),
+          ),
+          padding: const EdgeInsets.all(20),
+          child: SvgIcon(icon: icon),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          title,
+          style: AppText.small,
+        ),
+      ],
     );
   }
 }
@@ -108,10 +103,10 @@ class ButtonCloseFilter extends StatelessWidget {
         height: 60,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          gradient: const LinearGradient(
+          gradient: LinearGradient(
             colors: [
-              Color(0xff1a1a1a4d),
-              Color(0xff1a1a1a4d),
+              Colors.black.withOpacity(.3),
+              Colors.black.withOpacity(.3),
             ],
           ),
         ),

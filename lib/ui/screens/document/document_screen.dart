@@ -10,6 +10,7 @@ import 'package:scan_doc/domain/di/get_it_services.dart';
 import 'package:scan_doc/ui/resurses/colors.dart';
 import 'package:scan_doc/ui/resurses/icons.dart';
 import 'package:scan_doc/ui/resurses/images.dart';
+import 'package:scan_doc/ui/resurses/text.dart';
 import 'package:scan_doc/ui/screens/save_document/widgets/documents_columns.dart';
 import 'package:scan_doc/ui/screens/save_document/widgets/documents_grid.dart';
 import 'package:scan_doc/ui/screens/save_document/widgets/rename_modal.dart';
