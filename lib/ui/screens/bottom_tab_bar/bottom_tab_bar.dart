@@ -120,6 +120,13 @@ class BottomBarWidget extends StatelessWidget {
                 final newStatus = await Permission.camera.request();
                 if (newStatus.isDenied) return;
               }
+
+              var statusPhotos = await Permission.mediaLibrary.request();
+              if (statusPhotos.isDenied) {
+                final newStatusPhotos = await Permission.mediaLibrary.request();
+                if (newStatusPhotos.isDenied) return;
+              }
+
               Gaimon.selection();
               final image = await CunningDocumentScanner.getPictures(
                 noOfPages: 1,
