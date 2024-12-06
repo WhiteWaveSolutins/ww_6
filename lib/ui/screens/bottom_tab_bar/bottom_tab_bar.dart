@@ -116,13 +116,13 @@ class BottomBarWidget extends StatelessWidget {
           GestureDetector(
             onTap: () async {
               var status = await Permission.camera.status;
-              if (status.isDenied) {
+              if (status.isDenied || status.isPermanentlyDenied) {
                 final newStatus = await Permission.camera.request();
                 if (newStatus.isDenied) return;
               }
 
               var statusPhotos = await Permission.photos.request();
-              if (statusPhotos.isDenied) {
+              if (statusPhotos.isDenied || status.isPermanentlyDenied) {
                 final newStatusPhotos = await Permission.photos.request();
                 if (newStatusPhotos.isDenied) return;
               }
