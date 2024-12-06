@@ -121,9 +121,9 @@ class BottomBarWidget extends StatelessWidget {
                 if (newStatus.isDenied) return;
               }
 
-              var statusPhotos = await Permission.mediaLibrary.request();
+              var statusPhotos = await Permission.photos.request();
               if (statusPhotos.isDenied) {
-                final newStatusPhotos = await Permission.mediaLibrary.request();
+                final newStatusPhotos = await Permission.photos.request();
                 if (newStatusPhotos.isDenied) return;
               }
 
