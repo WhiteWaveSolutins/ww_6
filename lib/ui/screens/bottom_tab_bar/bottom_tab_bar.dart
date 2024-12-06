@@ -1,6 +1,7 @@
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_open_app_settings/flutter_open_app_settings.dart';
 import 'package:gaimon/gaimon.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:scan_doc/domain/di/get_it_services.dart';
@@ -113,49 +114,80 @@ class BottomBarWidget extends StatelessWidget {
               ],
             ),
           ),
-          GestureDetector(
-            onTap: () async {
-              var status = await Permission.camera.status;
-              if (status.isDenied || status.isPermanentlyDenied) {
-                final newStatus = await Permission.camera.request();
-                if (newStatus.isDenied) return;
-              }
-
-              var statusPhotos = await Permission.photos.request();
-              if (statusPhotos.isDenied || status.isPermanentlyDenied) {
-                final newStatusPhotos = await Permission.photos.request();
-                if (newStatusPhotos.isDenied) return;
-              }
-
-              Gaimon.selection();
-              final image = await CunningDocumentScanner.getPictures(
-                noOfPages: 1,
-                isGalleryImportAllowed: true,
-              );
-              if ((image ?? []).isNotEmpty) {
-                getItService.navigatorService.onSaveDocument(image: image!.first);
-              }
-            },
-            child: Container(
-              width: 70,
-              height: 70,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                gradient: const LinearGradient(
-                  colors: [
-                    AppColors.primaryGrad1,
-                    AppColors.primaryGrad2,
-                  ],
-                ),
-              ),
-              padding: const EdgeInsets.all(10),
-              child: const SvgIcon(
-                icon: AppIcons.scan,
-                size: 50,
-              ),
-            ),
-          ),
+          const _Scanner(),
         ],
+      ),
+    );
+  }
+}
+
+class _Scanner extends StatefulWidget {
+  const _Scanner({super.key});
+
+  @override
+  State<_Scanner> createState() => _ScannerState();
+}
+
+class _ScannerState extends State<_Scanner> {
+  Future<bool> _getPermission() async {
+    try {
+      var status = await Permission.camera.status;
+      if (status.isDenied || status.isPermanentlyDenied) {
+        final newStatus = await Permission.camera.request();
+        if (newStatus.isDenied || status.isPermanentlyDenied) return false;
+      }
+
+      var statusPhotos = await Permission.photos.request();
+      if (statusPhotos.isDenied || status.isPermanentlyDenied) {
+        final newStatusPhotos = await Permission.photos.request();
+        if (newStatusPhotos.isDenied || status.isPermanentlyDenied) return false;
+      }
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  void _scanner() async {
+    final status = await _getPermission();
+    if (!status) {
+      FlutterOpenAppSettings.openAppsSettings(
+        settingsCode: SettingsCode.APP_SETTINGS,
+        onCompletion: () {},
+      );
+      return;
+    }
+    Gaimon.selection();
+    final image = await CunningDocumentScanner.getPictures(
+      noOfPages: 1,
+      isGalleryImportAllowed: true,
+    );
+    if ((image ?? []).isNotEmpty) {
+      getItService.navigatorService.onSaveDocument(image: image!.first);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: _scanner,
+      child: Container(
+        width: 70,
+        height: 70,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          gradient: const LinearGradient(
+            colors: [
+              AppColors.primaryGrad1,
+              AppColors.primaryGrad2,
+            ],
+          ),
+        ),
+        padding: const EdgeInsets.all(10),
+        child: const SvgIcon(
+          icon: AppIcons.scan,
+          size: 50,
+        ),
       ),
     );
   }
