@@ -1,7 +1,8 @@
+import 'dart:io';
+
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_open_app_settings/flutter_open_app_settings.dart';
 import 'package:gaimon/gaimon.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:scan_doc/domain/di/get_it_services.dart';
@@ -137,10 +138,12 @@ class _ScannerState extends State<_Scanner> {
         if (newStatus.isDenied || status.isPermanentlyDenied) return false;
       }
 
-      var statusPhotos = await Permission.photos.request();
-      if (statusPhotos.isDenied || status.isPermanentlyDenied) {
-        final newStatusPhotos = await Permission.photos.request();
-        if (newStatusPhotos.isDenied || status.isPermanentlyDenied) return false;
+      if (Platform.isIOS) {
+        var statusPhotos = await Permission.photos.request();
+        if (statusPhotos.isDenied || status.isPermanentlyDenied) {
+          final newStatusPhotos = await Permission.photos.request();
+          if (newStatusPhotos.isDenied || status.isPermanentlyDenied) return false;
+        }
       }
       return true;
     } catch (_) {
@@ -151,12 +154,9 @@ class _ScannerState extends State<_Scanner> {
   void _scanner() async {
     final status = await _getPermission();
     if (!status) {
-      FlutterOpenAppSettings.openAppsSettings(
-        settingsCode: SettingsCode.APP_SETTINGS,
-        onCompletion: () {},
-      );
       return;
     }
+
     Gaimon.selection();
     final image = await CunningDocumentScanner.getPictures(
       noOfPages: 1,

@@ -79,6 +79,12 @@ class _MainScreenState extends State<MainScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           children: [
             SearchField(
+              onClear: searchController.text.isEmpty
+                  ? null
+                  : () {
+                      searchController.clear();
+                      setState(() {});
+                    },
               onChanged: () => setState(() {}),
               controller: searchController,
             ),

@@ -467,14 +467,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.3"
-  flutter_open_app_settings:
-    dependency: "direct main"
-    description:
-      name: flutter_open_app_settings
-      sha256: "9a4e4d174fc3a358b5737a2a0886b8a350ec3cc6478586a8e23568b811e0895b"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.4"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:

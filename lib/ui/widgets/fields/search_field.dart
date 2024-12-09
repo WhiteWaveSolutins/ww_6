@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scan_doc/ui/resurses/colors.dart';
 import 'package:scan_doc/ui/resurses/text.dart';
@@ -5,11 +6,13 @@ import 'package:scan_doc/ui/resurses/text.dart';
 class SearchField extends StatelessWidget {
   final TextEditingController? controller;
   final Function()? onChanged;
+  final Function()? onClear;
 
   const SearchField({
     super.key,
     this.controller,
     this.onChanged,
+    this.onClear,
   });
 
   @override
@@ -23,6 +26,15 @@ class SearchField extends StatelessWidget {
       cursorColor: Colors.white,
       decoration: InputDecoration(
         hintText: 'Search...',
+        suffixIcon: onClear == null
+            ? null
+            : GestureDetector(
+                onTap: onClear,
+                child: const Icon(
+                  CupertinoIcons.clear_circled_solid,
+                  color: AppColors.red,
+                ),
+              ),
         prefixIcon: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
