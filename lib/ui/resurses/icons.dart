@@ -16,4 +16,9 @@ class AppIcons {
   static const noSearch = 'assets/icons/no_search.svg';
   static const faceId = 'assets/icons/face-id.svg';
   static const cut = 'assets/icons/cut.svg';
+  static const paint = 'assets/icons/paint.svg';
+  static const filter = 'assets/icons/filter.svg';
+  static const text = 'assets/icons/text.svg';
+  static const turnLeft = 'assets/icons/turn_left.svg';
+  static const turnRight = 'assets/icons/turn_right.svg';
 }

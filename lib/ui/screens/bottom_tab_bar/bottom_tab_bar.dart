@@ -11,6 +11,7 @@ import 'package:scan_doc/ui/resurses/icons.dart';
 import 'package:scan_doc/ui/screens/main/main_screen.dart';
 import 'package:scan_doc/ui/screens/settings/settings_screen.dart';
 import 'package:scan_doc/ui/widgets/svg_icon.dart';
+import 'package:flutter_open_app_settings/flutter_open_app_settings.dart';
 
 class BottomTabBar extends StatefulWidget {
   const BottomTabBar({super.key});
@@ -153,7 +154,11 @@ class _ScannerState extends State<_Scanner> {
 
   void _scanner() async {
     final status = await _getPermission();
-    if (!status) {
+    if (!status && Platform.isIOS) {
+      FlutterOpenAppSettings.openAppsSettings(
+        settingsCode: SettingsCode.APP_SETTINGS,
+        onCompletion: () {},
+      );
       return;
     }
 
