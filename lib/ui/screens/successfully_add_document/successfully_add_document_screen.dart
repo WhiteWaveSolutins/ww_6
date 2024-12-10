@@ -67,8 +67,8 @@ class _SuccessfullyAddDocumentScreenState extends State<SuccessfullyAddDocumentS
                               color: Colors.white.withOpacity(.1),
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            child: Image.file(
-                              File(path),
+                            child: Image.memory(
+                              File(path).readAsBytesSync(),
                             ),
                           ),
                         ),

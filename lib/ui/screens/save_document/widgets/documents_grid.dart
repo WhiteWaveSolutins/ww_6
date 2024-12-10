@@ -161,8 +161,8 @@ class _Item extends StatelessWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(30),
-              child: Image.file(
-                File(data),
+              child: Image.memory(
+                File(data).readAsBytesSync(),
                 width: 370,
                 fit: BoxFit.fitWidth,
                 height: 230,

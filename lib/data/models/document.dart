@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/services.dart';
 import 'package:scan_doc/data/database/database.dart';
 
 class Document {
@@ -27,4 +30,21 @@ class Document {
         folders: folders.map((e) => e.folderId).toList(),
         paths: paths.map((e) => e.path).toList(),
       );
+
+  List<ImageData> get bytes => paths
+      .map((e) => ImageData(
+            path: e,
+            data: File(e).readAsBytesSync(),
+          ))
+      .toList();
+}
+
+class ImageData {
+  final String path;
+  final Uint8List data;
+
+  ImageData({
+    required this.path,
+    required this.data,
+  });
 }

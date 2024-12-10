@@ -56,10 +56,8 @@ class _DocumentsColumnsState extends State<DocumentsColumns> {
                       color: Colors.white.withOpacity(.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Image.file(
-                      File(
-                        image,
-                      ),
+                    child: Image.memory(
+                      File(image).readAsBytesSync(),
                     ),
                   ),
                 ),

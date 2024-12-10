@@ -155,8 +155,8 @@ class DocumentCard extends StatelessWidget {
                       color: Colors.white.withOpacity(.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Image.file(
-                      File(document.paths.first),
+                    child: Image.memory(
+                      File(document.paths.first).readAsBytesSync(),
                     ),
                   ),
                 ),
