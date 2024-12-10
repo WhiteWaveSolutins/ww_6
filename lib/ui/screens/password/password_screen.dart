@@ -92,8 +92,9 @@ class _PasswordScreenState extends State<PasswordScreen> {
                 ),
                 if (widget.title != null && faceIdHave) ...[
                   const SizedBox(height: 40),
-                  GestureDetector(
-                    onTap: authorization,
+                  CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: authorization,
                     child: const SvgIcon(
                       icon: AppIcons.faceId,
                       size: 40,

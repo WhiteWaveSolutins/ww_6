@@ -13,6 +13,7 @@ import 'package:scan_doc/ui/screens/costomize_document/widgets/buttons_history_c
 import 'package:scan_doc/ui/screens/costomize_document/widgets/costomize_widget.dart';
 import 'package:scan_doc/ui/screens/costomize_document/widgets/crop_editor.dart';
 import 'package:scan_doc/ui/screens/costomize_document/widgets/filter_editor.dart';
+import 'package:scan_doc/ui/screens/costomize_document/widgets/sticker_editor.dart';
 
 class CostomizeDocumentScreen extends StatelessWidget {
   final String image;
@@ -30,7 +31,9 @@ class CostomizeDocumentScreen extends StatelessWidget {
         imageBack: AppImages.mainBack,
         callbacks: ProImageEditorCallbacks(
           onImageEditingComplete: (Uint8List bytes) async {
-            Navigator.pop(context);
+            final file = File(image);
+            await file.writeAsBytes(bytes);
+            Navigator.of(context).pop(file.path);
           },
         ),
         buttonsHistory: (
@@ -65,43 +68,37 @@ class CostomizeDocumentScreen extends StatelessWidget {
           emojiEditorConfigs: const EmojiEditorConfigs(enabled: false),
           stickerEditorConfigs: StickerEditorConfigs(
             enabled: true,
-            buildStickers: (
-              Function(Widget) setLayer,
-              ScrollController scrollController,
-            ) {
-              return Container(
-                color: Colors.yellow,
-                width: double.infinity,
-                height: 50,
-                child: GestureDetector(
-                  onTap: () => setLayer(Container(
-                    width: 50,
-                    height: 50,
-                    color: Colors.red,
-                  )),
-                  child: Text(
-                    'dsd',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                ),
-              );
-            },
+            buildStickers: (Function(Widget) setLayer) => StickerEditorWidget(
+              setLayer: setLayer,
+            ),
           ),
           filterEditorConfigs: const FilterEditorConfigs(),
-          icons: const ImageEditorIcons(
+          icons: ImageEditorIcons(
             stickerEditor: IconsStickerEditor(
+              bottomNavBar: Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.white.withOpacity(.1),
+                ),
+                padding: const EdgeInsets.all(20),
+                child: const Icon(
+                  CupertinoIcons.smiley,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            cropRotateEditor: const IconsCropRotateEditor(
               bottomNavBar: ConsomizeIcon(icon: AppIcons.cut),
             ),
-            cropRotateEditor: IconsCropRotateEditor(
-              bottomNavBar: ConsomizeIcon(icon: AppIcons.cut),
-            ),
-            filterEditor: IconsFilterEditor(
+            filterEditor: const IconsFilterEditor(
               bottomNavBar: ConsomizeIcon(icon: AppIcons.filter),
             ),
-            textEditor: IconsTextEditor(
+            textEditor: const IconsTextEditor(
               bottomNavBar: ConsomizeIcon(icon: AppIcons.text),
             ),
-            paintingEditor: IconsPaintingEditor(
+            paintingEditor: const IconsPaintingEditor(
               bottomNavBar: ConsomizeIcon(icon: AppIcons.paint),
             ),
           ),

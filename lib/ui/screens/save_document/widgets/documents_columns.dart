@@ -10,7 +10,6 @@ import 'package:scan_doc/ui/resurses/icons.dart';
 import 'package:scan_doc/ui/resurses/text.dart';
 import 'package:scan_doc/ui/widgets/gradient_widget.dart';
 import 'package:scan_doc/ui/widgets/svg_icon.dart';
-import 'package:path/path.dart' as p;
 
 class DocumentsColumns extends StatefulWidget {
   final List<String> images;
@@ -18,7 +17,7 @@ class DocumentsColumns extends StatefulWidget {
   final Function(int) onDelete;
   final Function(int) onReplace;
   final Function() onRename;
-  final Directory directory;
+  final Function() onUpdateState;
   final String nameDoc;
   final bool isEdit;
 
@@ -26,7 +25,7 @@ class DocumentsColumns extends StatefulWidget {
     super.key,
     required this.images,
     required this.onRename,
-    required this.directory,
+    required this.onUpdateState,
     required this.onAdd,
     required this.onDelete,
     required this.onReplace,
@@ -59,14 +58,15 @@ class _DocumentsColumnsState extends State<DocumentsColumns> {
                     ),
                     child: Image.file(
                       File(
-                        p.join(widget.directory.path, image),
+                        image,
                       ),
                     ),
                   ),
                 ),
               if (widget.isEdit)
-                GestureDetector(
-                  onTap: widget.onAdd,
+                CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: widget.onAdd,
                   child: Container(
                     width: 370,
                     decoration: BoxDecoration(
@@ -117,8 +117,9 @@ class _DocumentsColumnsState extends State<DocumentsColumns> {
               ),
               Opacity(
                 opacity: widget.isEdit ? 1 : 0,
-                child: GestureDetector(
-                  onTap: widget.isEdit ? widget.onRename : null,
+                child: CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: widget.isEdit ? widget.onRename : null,
                   child: const SvgIcon(icon: AppIcons.edit),
                 ),
               ),
@@ -132,9 +133,13 @@ class _DocumentsColumnsState extends State<DocumentsColumns> {
             child: _Buttons(
               onDelete: () => widget.onDelete(selectedIndex),
               onReplace: () => widget.onReplace(selectedIndex),
-              onEdit: () => getItService.navigatorService.onCostomizeDocument(
-                image: widget.images[selectedIndex],
-              ),
+              onEdit: () async {
+                final image = await getItService.navigatorService.onCostomizeDocument(
+                  image: widget.images[selectedIndex],
+                );
+                widget.onUpdateState();
+                setState(() {});
+              },
             ),
           ),
       ],
@@ -159,8 +164,9 @@ class _Buttons extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        GestureDetector(
-          onTap: onReplace,
+        CupertinoButton(
+          padding: EdgeInsets.zero,
+          onPressed: onReplace,
           child: Container(
             width: 60,
             height: 60,
@@ -175,8 +181,9 @@ class _Buttons extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 8),
-        GestureDetector(
-          onTap: onEdit,
+        CupertinoButton(
+          padding: EdgeInsets.zero,
+          onPressed: onEdit,
           child: Container(
             width: 60,
             height: 60,
@@ -191,8 +198,9 @@ class _Buttons extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 8),
-        GestureDetector(
-          onTap: onDelete,
+        CupertinoButton(
+          padding: EdgeInsets.zero,
+          onPressed: onDelete,
           child: const SvgIcon(
             icon: AppIcons.basketFill,
           ),

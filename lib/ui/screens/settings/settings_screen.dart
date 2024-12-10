@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gaimon/gaimon.dart';
 import 'package:in_app_review/in_app_review.dart';
@@ -204,8 +205,9 @@ class _Item extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
+    return CupertinoButton(
+      padding: EdgeInsets.zero,
+      onPressed: () {
         Gaimon.selection();
         onTap();
       },

@@ -50,8 +50,9 @@ class _FolderScreenState extends State<FolderScreen> {
                   margin: false,
                 ),
                 const Spacer(),
-                GestureDetector(
-                  onTap: () {
+                CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
                     showModalBottomSheet(
                       isScrollControlled: true,
                       constraints: BoxConstraints(
@@ -76,8 +77,9 @@ class _FolderScreenState extends State<FolderScreen> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                GestureDetector(
-                  onTap: () {
+                CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
                     showDialog(
                       context: context,
                       useRootNavigator: true,

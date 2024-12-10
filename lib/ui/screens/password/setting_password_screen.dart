@@ -26,8 +26,9 @@ class SettingPasswordScreen extends StatelessWidget {
               children: [
                 const TitlePassword(),
                 const SizedBox(height: 24),
-                GestureDetector(
-                  onTap: () {
+                CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
                     SharedPreferencesService.removePassword();
                     getItService.navigatorService.onFirst();
                   },
@@ -41,8 +42,9 @@ class SettingPasswordScreen extends StatelessWidget {
                 const SizedBox(height: 24),
                 const Divider(height: 0, color: Colors.white),
                 const SizedBox(height: 24),
-                GestureDetector(
-                  onTap: () async {
+                CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () async {
                     await SharedPreferencesService.removePassword();
                     getItService.navigatorService.onFirst();
                     getItService.navigatorService.onInfoPassword(

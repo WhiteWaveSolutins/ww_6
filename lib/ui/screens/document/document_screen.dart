@@ -10,7 +10,6 @@ import 'package:scan_doc/domain/di/get_it_services.dart';
 import 'package:scan_doc/ui/resurses/colors.dart';
 import 'package:scan_doc/ui/resurses/icons.dart';
 import 'package:scan_doc/ui/resurses/images.dart';
-import 'package:scan_doc/ui/resurses/text.dart';
 import 'package:scan_doc/ui/screens/save_document/widgets/documents_columns.dart';
 import 'package:scan_doc/ui/screens/save_document/widgets/documents_grid.dart';
 import 'package:scan_doc/ui/screens/save_document/widgets/rename_modal.dart';
@@ -178,8 +177,9 @@ class _DocumentScreenState extends State<DocumentScreen> {
                 child: isDeleting
                     ? Opacity(
                         opacity: deleting.isEmpty ? .5 : 1,
-                        child: GestureDetector(
-                          onTap: () {
+                        child: CupertinoButton(
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
                             if (deleting.isEmpty) return;
                             if (deleting.length == docs.length) {
                               onClose();
@@ -231,48 +231,43 @@ class _DocumentScreenState extends State<DocumentScreen> {
                         ],
                       ),
               ),
-              if (directory == null)
-                const CupertinoActivityIndicator(color: Colors.white)
-              else ...[
-                if (isColumn)
-                  Expanded(
-                    child: DocumentsColumns(
-                      onRename: onRename,
-                      images: docs,
-                      nameDoc: name,
-                      isEdit: isEdit,
-                      onAdd: onAdd,
-                      directory: directory!,
-                      onDelete: onDelete,
-                      onReplace: onReplace,
-                    ),
+              if (isColumn)
+                Expanded(
+                  child: DocumentsColumns(
+                    onRename: onRename,
+                    images: docs,
+                    nameDoc: name,
+                    isEdit: isEdit,
+                    onAdd: onAdd,
+                    onUpdateState: () => setState(() {}),
+                    onDelete: onDelete,
+                    onReplace: onReplace,
                   ),
-                if (!isColumn)
-                  Expanded(
-                    child: DocumentsGrid(
-                      images: docs,
-                      deleting: deleting,
-                      onAdd: onAdd,
-                      isDelete: isDeleting,
-                      onSelectDelete: (image) {
-                        if (deleting.contains(image)) {
-                          deleting.remove(image);
-                        } else {
-                          deleting.add(image);
-                        }
-                        setState(() {});
-                      },
-                      onSwitchDelete: () {
-                        deleting = [];
-                        setState(() => isDeleting = !isDeleting);
-                      },
-                      directory: directory!,
-                      scrollController: ScrollController(),
-                      reorder: (list) => setState(() => docs = list),
-                    ),
+                ),
+              if (!isColumn)
+                Expanded(
+                  child: DocumentsGrid(
+                    images: docs,
+                    deleting: deleting,
+                    onAdd: onAdd,
+                    isDelete: isDeleting,
+                    onSelectDelete: (image) {
+                      if (deleting.contains(image)) {
+                        deleting.remove(image);
+                      } else {
+                        deleting.add(image);
+                      }
+                      setState(() {});
+                    },
+                    onSwitchDelete: () {
+                      deleting = [];
+                      setState(() => isDeleting = !isDeleting);
+                    },
+                    scrollController: ScrollController(),
+                    reorder: (list) => setState(() => docs = list),
                   ),
-                const SizedBox(height: 30),
-              ],
+                ),
+              const SizedBox(height: 30),
             ],
           ),
         ),
@@ -294,7 +289,7 @@ class _Type extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(.1),
         borderRadius: BorderRadius.circular(20),
@@ -302,8 +297,9 @@ class _Type extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          GestureDetector(
-            onTap: () => onSet(true),
+          CupertinoButton(
+            padding: EdgeInsets.zero,
+            onPressed: () => onSet(true),
             child: SvgIcon(
               icon: AppIcons.columns,
               size: 24,
@@ -311,8 +307,9 @@ class _Type extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 20),
-          GestureDetector(
-            onTap: () => onSet(false),
+          CupertinoButton(
+            padding: EdgeInsets.zero,
+            onPressed: () => onSet(false),
             child: SvgIcon(
               icon: AppIcons.grid,
               size: 24,

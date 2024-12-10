@@ -18,6 +18,7 @@ import 'package:scan_doc/ui/widgets/gradient_text.dart';
 import 'package:scan_doc/ui/widgets/image_back.dart';
 import 'package:scan_doc/ui/widgets/modal/add_document_in_folder_modal.dart';
 import 'package:scan_doc/ui/widgets/svg_icon.dart';
+import 'package:share_plus/share_plus.dart';
 
 class SuccessfullyAddDocumentScreen extends StatefulWidget {
   final Document document;
@@ -132,8 +133,9 @@ class _SuccessfullyAddDocumentScreenState extends State<SuccessfullyAddDocumentS
                 ),
               ),
               if (folderIds.isEmpty)
-                GestureDetector(
-                  onTap: () {
+                CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
                     showModalBottomSheet(
                       isScrollControlled: true,
                       constraints: BoxConstraints(
@@ -185,8 +187,9 @@ class _SuccessfullyAddDocumentScreenState extends State<SuccessfullyAddDocumentS
                                     ),
                                   ],
                                 ),
-                                GestureDetector(
-                                  onTap: () {
+                                CupertinoButton(
+                                  padding: EdgeInsets.zero,
+                                  onPressed: () {
                                     getItService.documentUseCase.deleteFolderDocument(
                                       documentId: widget.document.id,
                                       folderId: folder.id,
@@ -220,20 +223,25 @@ class _SuccessfullyAddDocumentScreenState extends State<SuccessfullyAddDocumentS
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   children: [
-                    Expanded(
-                      child: SimpleButton(
-                        title: 'Download',
-                        icon: AppIcons.file,
-                        onPressed: () {},
+                    if (false)
+                      Expanded(
+                        child: SimpleButton(
+                          title: 'Download',
+                          icon: AppIcons.file,
+                          onPressed: () {},
+                        ),
                       ),
-                    ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: SimpleButton(
                         color: Colors.white.withOpacity(.1),
                         title: 'Share',
                         icon: AppIcons.returnI,
-                        onPressed: () {},
+                        onPressed: () {
+                          Share.shareXFiles(
+                            widget.document.paths.map((e) => XFile(e)).toList(),
+                          );
+                        },
                       ),
                     ),
                   ],

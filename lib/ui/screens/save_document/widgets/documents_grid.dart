@@ -8,7 +8,6 @@ import 'package:scan_doc/ui/resurses/colors.dart';
 import 'package:scan_doc/ui/resurses/icons.dart';
 import 'package:scan_doc/ui/resurses/text.dart';
 import 'package:scan_doc/ui/widgets/gradient_widget.dart';
-import 'package:path/path.dart' as p;
 import 'package:scan_doc/ui/widgets/svg_icon.dart';
 
 class DocumentsGrid extends StatelessWidget {
@@ -16,7 +15,6 @@ class DocumentsGrid extends StatelessWidget {
   final Function() onAdd;
   final ScrollController scrollController;
   final Function(List<String>) reorder;
-  final Directory directory;
   final bool isDelete;
   final List<String> deleting;
   final Function() onSwitchDelete;
@@ -29,7 +27,6 @@ class DocumentsGrid extends StatelessWidget {
     required this.scrollController,
     required this.onAdd,
     required this.reorder,
-    required this.directory,
     required this.isDelete,
     required this.onSwitchDelete,
     required this.onSelectDelete,
@@ -67,21 +64,22 @@ class DocumentsGrid extends StatelessWidget {
                 CustomDraggable(
                   key: Key(images[i].toString()),
                   data: i,
-                  child: GestureDetector(
-                    onTap: () {
+                  child: CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () {
                       if (isDelete) onSelectDelete(images[i]);
                     },
                     child: _Item(
                       data: images[i],
                       isDeleting: deleting.contains(images[i]),
-                      directory: directory,
                       index: i + 1,
                     ),
                   ),
                 ),
-              GestureDetector(
+              CupertinoButton(
+                padding: EdgeInsets.zero,
+                onPressed: onAdd,
                 key: const Key('Add'),
-                onTap: onAdd,
                 child: Container(
                   width: 370,
                   decoration: BoxDecoration(
@@ -108,8 +106,9 @@ class DocumentsGrid extends StatelessWidget {
               ),
             ],
           ),
-          GestureDetector(
-            onTap: onSwitchDelete,
+          CupertinoButton(
+            padding: EdgeInsets.zero,
+            onPressed: onSwitchDelete,
             child: Container(
               width: 60,
               height: 60,
@@ -134,14 +133,12 @@ class _Item extends StatelessWidget {
   final String data;
   final int index;
   final bool isDeleting;
-  final Directory directory;
 
   const _Item({
     super.key,
     required this.data,
     required this.index,
     required this.isDeleting,
-    required this.directory,
   });
 
   @override
@@ -165,9 +162,7 @@ class _Item extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(30),
               child: Image.file(
-                File(
-                  p.join(directory.path, data),
-                ),
+                File(data),
                 width: 370,
                 fit: BoxFit.fitWidth,
                 height: 230,

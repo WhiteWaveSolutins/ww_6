@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:scan_doc/data/models/folder.dart';
@@ -66,8 +67,9 @@ class FolderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
+    return CupertinoButton(
+      padding: EdgeInsets.zero,
+      onPressed: () {
         if (folder.havePassword) {
           getItService.navigatorService.onInfoPassword(
             onOpen: () {

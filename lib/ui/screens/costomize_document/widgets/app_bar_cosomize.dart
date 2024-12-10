@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AppBarCosomize extends StatelessWidget {
@@ -17,8 +18,9 @@ class AppBarCosomize extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          GestureDetector(
-            onTap: onClose,
+          CupertinoButton(
+            padding: EdgeInsets.zero,
+            onPressed: onClose,
             child: Container(
               width: 60,
               height: 60,
@@ -29,8 +31,9 @@ class AppBarCosomize extends StatelessWidget {
               child: const Icon(Icons.clear),
             ),
           ),
-          GestureDetector(
-            onTap: onFinish,
+          CupertinoButton(
+            padding: EdgeInsets.zero,
+            onPressed: onFinish,
             child: Container(
               width: 60,
               height: 60,

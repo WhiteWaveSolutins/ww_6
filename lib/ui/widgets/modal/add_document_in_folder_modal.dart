@@ -101,8 +101,9 @@ class _AddDocumentInFolderModalState extends State<AddDocumentInFolderModal> {
                         itemCount: state.folders.length + 1,
                         itemBuilder: (context, index) {
                           if (index == state.folders.length) return const _Add();
-                          return GestureDetector(
-                            onTap: () {
+                          return CupertinoButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () {
                               if (folders.contains(state.folders[index].id)) {
                                 folders.remove(state.folders[index].id);
                               } else {
@@ -150,8 +151,9 @@ class _AddDocumentInFolderModalState extends State<AddDocumentInFolderModal> {
             ),
             Padding(
               padding: const EdgeInsets.only(right: 16, bottom: 30),
-              child: GestureDetector(
-                onTap: isLoading ? null : move,
+              child: CupertinoButton(
+                padding: EdgeInsets.zero,
+                onPressed: isLoading ? null : move,
                 child: Container(
                   width: 60,
                   height: 60,
@@ -192,8 +194,9 @@ class _Add extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
+    return CupertinoButton(
+      padding: EdgeInsets.zero,
+      onPressed: () {
         showModalBottomSheet(
           isScrollControlled: true,
           constraints: BoxConstraints(

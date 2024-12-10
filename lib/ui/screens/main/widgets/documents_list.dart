@@ -15,6 +15,7 @@ import 'package:scan_doc/ui/state_manager/document/state.dart';
 import 'package:scan_doc/ui/state_manager/store.dart';
 import 'package:scan_doc/ui/widgets/modal/add_document_in_folder_modal.dart';
 import 'package:scan_doc/ui/widgets/svg_icon.dart';
+import 'package:share_plus/share_plus.dart';
 
 class DocumentsList extends StatelessWidget {
   final Folder? folder;
@@ -104,7 +105,7 @@ class DocumentsList extends StatelessWidget {
                   shrinkWrap: true,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     childAspectRatio: 50,
-                    mainAxisExtent: 120,
+                    mainAxisExtent: 125,
                     mainAxisSpacing: 8,
                     crossAxisCount: 3,
                     crossAxisSpacing: 21,
@@ -133,8 +134,9 @@ class DocumentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => getItService.navigatorService.onDocument(
+    return CupertinoButton(
+      padding: EdgeInsets.zero,
+      onPressed: () => getItService.navigatorService.onDocument(
         document: document,
       ),
       child: Stack(
@@ -204,6 +206,9 @@ class _More extends StatelessWidget {
           ),
           onTap: () {
             Gaimon.selection();
+            Share.shareXFiles(
+              document.paths.map((e) => XFile(e)).toList(),
+            );
           },
         ),
         PullDownMenuItem(

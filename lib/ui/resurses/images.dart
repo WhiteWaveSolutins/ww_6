@@ -15,4 +15,5 @@ class AppImages {
   static const crow = 'assets/images/crow.png';
   static const mo = 'assets/images/mo.png';
   static const fire = 'assets/images/fire.png';
+  static const sticker = 'assets/images/stickers/sticker-.png';
 }

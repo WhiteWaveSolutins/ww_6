@@ -1037,7 +1037,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "5c177cf60d1a5f7808a2273f61470aa5316bc570"
+      resolved-ref: "8349ad2e0989a9f3fdbaa6023277326ca085ff60"
       url: "https://github.com/Asl20015/pro_image_editor2.git"
     source: git
     version: "6.2.0"

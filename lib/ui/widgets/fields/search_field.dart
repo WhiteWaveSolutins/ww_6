@@ -28,8 +28,9 @@ class SearchField extends StatelessWidget {
         hintText: 'Search...',
         suffixIcon: onClear == null
             ? null
-            : GestureDetector(
-                onTap: onClear,
+            : CupertinoButton(
+                padding: EdgeInsets.zero,
+                onPressed: onClear,
                 child: const Icon(
                   CupertinoIcons.clear_circled_solid,
                   color: AppColors.red,

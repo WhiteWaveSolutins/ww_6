@@ -174,8 +174,9 @@ class _ScannerState extends State<_Scanner> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _scanner,
+    return CupertinoButton(
+      padding: EdgeInsets.zero,
+      onPressed: _scanner,
       child: Container(
         width: 70,
         height: 70,

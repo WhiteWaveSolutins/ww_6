@@ -1,11 +1,8 @@
-import 'dart:io';
-
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:gaimon/gaimon.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:scan_doc/domain/di/get_it_services.dart';
 import 'package:scan_doc/ui/resurses/colors.dart';
 import 'package:scan_doc/ui/resurses/icons.dart';
@@ -19,7 +16,6 @@ import 'package:scan_doc/ui/widgets/buttons/close_button.dart';
 import 'package:scan_doc/ui/widgets/buttons/simple_button.dart';
 import 'package:scan_doc/ui/widgets/image_back.dart';
 import 'package:scan_doc/ui/widgets/svg_icon.dart';
-import 'package:path/path.dart' as p;
 
 class SaveDocumentScreen extends StatefulWidget {
   final String image;
@@ -37,7 +33,6 @@ class _SaveDocumentScreenState extends State<SaveDocumentScreen> {
   bool isColumn = true;
   bool isDeleting = false;
   bool isLoading = false;
-  late Directory? directory;
   late String name;
 
   List<String> docs = [];
@@ -47,16 +42,9 @@ class _SaveDocumentScreenState extends State<SaveDocumentScreen> {
   void initState() {
     super.initState();
     docs.add(widget.image);
-    directory = null;
-    final store = StoreProvider.of<AppState>(context,listen: false);
-    final len = store.state.documentListState.documents.length+1;
+    final store = StoreProvider.of<AppState>(context, listen: false);
+    final len = store.state.documentListState.documents.length + 1;
     name = '${convertDate(date: DateTime.now())}. Document $len';
-    getApplicationDocumentsDirectory().then(
-      (v) {
-        directory = v;
-        if (mounted) setState(() {});
-      },
-    );
   }
 
   Future<String?> onScan() async {
@@ -141,9 +129,8 @@ class _SaveDocumentScreenState extends State<SaveDocumentScreen> {
   }
 
   void onSave() async {
-    if (directory == null) return;
     setState(() => isLoading = true);
-    final paths = docs.map((e) => p.join(directory!.path, e)).toList();
+    final paths = docs.map((e) => e).toList();
     final document = await getItService.documentUseCase.addDocument(
       name: name,
       paths: paths,
@@ -172,8 +159,9 @@ class _SaveDocumentScreenState extends State<SaveDocumentScreen> {
                 child: isDeleting
                     ? Opacity(
                         opacity: deleting.isEmpty ? .5 : 1,
-                        child: GestureDetector(
-                          onTap: () {
+                        child: CupertinoButton(
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
                             if (deleting.isEmpty) return;
                             if (deleting.length == docs.length) {
                               onClose();
@@ -224,47 +212,42 @@ class _SaveDocumentScreenState extends State<SaveDocumentScreen> {
                         ],
                       ),
               ),
-              if (directory == null)
-                const CupertinoActivityIndicator(color: Colors.white)
-              else ...[
-                if (isColumn)
-                  Expanded(
-                    child: DocumentsColumns(
-                      onRename: onRename,
-                      images: docs,
-                      nameDoc: name,
-                      onAdd: onAdd,
-                      directory: directory!,
-                      onDelete: onDelete,
-                      onReplace: onReplace,
-                    ),
+              if (isColumn)
+                Expanded(
+                  child: DocumentsColumns(
+                    onRename: onRename,
+                    onUpdateState: () => setState(() {}),
+                    images: docs,
+                    nameDoc: name,
+                    onAdd: onAdd,
+                    onDelete: onDelete,
+                    onReplace: onReplace,
                   ),
-                if (!isColumn)
-                  Expanded(
-                    child: DocumentsGrid(
-                      images: docs,
-                      deleting: deleting,
-                      onAdd: onAdd,
-                      isDelete: isDeleting,
-                      onSelectDelete: (image) {
-                        if (deleting.contains(image)) {
-                          deleting.remove(image);
-                        } else {
-                          deleting.add(image);
-                        }
-                        setState(() {});
-                      },
-                      onSwitchDelete: () {
-                        deleting = [];
-                        setState(() => isDeleting = !isDeleting);
-                      },
-                      directory: directory!,
-                      scrollController: ScrollController(),
-                      reorder: (list) => setState(() => docs = list),
-                    ),
+                ),
+              if (!isColumn)
+                Expanded(
+                  child: DocumentsGrid(
+                    images: docs,
+                    deleting: deleting,
+                    onAdd: onAdd,
+                    isDelete: isDeleting,
+                    onSelectDelete: (image) {
+                      if (deleting.contains(image)) {
+                        deleting.remove(image);
+                      } else {
+                        deleting.add(image);
+                      }
+                      setState(() {});
+                    },
+                    onSwitchDelete: () {
+                      deleting = [];
+                      setState(() => isDeleting = !isDeleting);
+                    },
+                    scrollController: ScrollController(),
+                    reorder: (list) => setState(() => docs = list),
                   ),
-                const SizedBox(height: 30),
-              ],
+                ),
+              const SizedBox(height: 30),
             ],
           ),
         ),
@@ -294,8 +277,9 @@ class _Type extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          GestureDetector(
-            onTap: () => onSet(true),
+          CupertinoButton(
+            padding: EdgeInsets.zero,
+            onPressed: () => onSet(true),
             child: SvgIcon(
               icon: AppIcons.columns,
               size: 24,
@@ -303,8 +287,9 @@ class _Type extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 20),
-          GestureDetector(
-            onTap: () => onSet(false),
+          CupertinoButton(
+            padding: EdgeInsets.zero,
+            onPressed: () => onSet(false),
             child: SvgIcon(
               icon: AppIcons.grid,
               size: 24,

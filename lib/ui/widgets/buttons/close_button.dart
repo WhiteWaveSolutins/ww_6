@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scan_doc/ui/resurses/colors.dart';
 
@@ -15,8 +16,9 @@ class AppCloseButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onClose ?? Navigator.of(context).pop,
+    return CupertinoButton(
+      padding: EdgeInsets.zero,
+      onPressed: onClose ?? Navigator.of(context).pop,
       child: Container(
         margin: margin ? const EdgeInsets.only(left: 16) : null,
         padding: EdgeInsets.all(padding),

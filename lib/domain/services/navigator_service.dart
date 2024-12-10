@@ -70,8 +70,8 @@ class NavigatorService {
     );
   }
 
-  void onCostomizeDocument({required String image}) {
-    navigatorKey.currentState!.pushNamed(
+  Future<dynamic> onCostomizeDocument({required String image}) {
+   return navigatorKey.currentState!.pushNamed(
       AppRoutes.costomizeDocument,
       arguments: AppRouterArguments(image: image),
     );
