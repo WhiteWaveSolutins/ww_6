@@ -61,7 +61,13 @@ dev_dependencies:
 flutter_icons:
   image_path: "assets/logo/logo.png"
   android: true
+  remove_alpha_ios: true
   ios: true
+
+flutter_native_splash:
+  image: "assets/logo/logo.png"
+  color: '#0F0F10'
+
 
 flutter_gen:
   integrations:
