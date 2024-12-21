@@ -2,10 +2,10 @@ name: scan_doc
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 1.0.0
+version: '1.0.0+1'
 
 environment:
-  sdk: '>=3.4.0 <4.0.0'
+  sdk: '>=3.5.3'
 
 dependencies:
   flutter:
@@ -67,7 +67,7 @@ flutter_icons:
 
 flutter_native_splash:
   image: "assets/logo/logo.png"
-  color: '#0F0F10'
+  color: '#9A55FE'
 
 
 flutter_gen:
