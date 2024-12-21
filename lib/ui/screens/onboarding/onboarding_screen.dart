@@ -36,7 +36,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   subtitle: 'Scan your documents and convert them to a PDF',
                   onTapButton: () {
                     setState(() => page = 1);
-                    InAppReview.instance.requestReview();
                   },
                 )
               : page == 1
@@ -50,8 +49,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                       title: 'We value\nyour feedback',
                       subtitle: 'That\'s what helps us improve our work',
-                      onTapButton: () => setState(() => page = 2),
-                    )
+                      onTapButton: () async {
+                        await InAppReview.instance.requestReview();
+                        setState(() => page = 2);
+                      })
                   : page == 2
                       ? OnboardingWidget(
                           index: 2,
@@ -62,7 +63,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             fit: BoxFit.cover,
                           ),
                           title: 'Editing\ndocuments',
-                          subtitle: 'Change filters, add text and captions and more',
+                          subtitle:
+                              'Change filters, add text and captions and more',
                           onTapButton: () {
                             getItService.navigatorService.onMain();
                             return;
@@ -86,7 +88,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             Gaimon.selection();
                             getItService.navigatorService.onMain();
                           },
-                          onTapButton: getItService.navigatorService.onGetPremium,
+                          onTapButton:
+                              getItService.navigatorService.onGetPremium,
                         ),
         ),
       ),
