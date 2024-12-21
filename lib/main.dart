@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_info/flutter_app_info.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:scan_doc/domain/di/locator.dart';
@@ -16,7 +17,8 @@ class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
 
@@ -40,13 +42,18 @@ void main() async {
     );
   };
 
-  runApp(QrCodeScannerReaderScan(locator: locator));
+  runApp(
+    AppInfo(
+      data: await AppInfoData.get(),
+      child: PDFScanner(locator: locator),
+    ),
+  );
 }
 
-class QrCodeScannerReaderScan extends StatelessWidget {
+class PDFScanner extends StatelessWidget {
   final LocatorService locator;
 
-  const QrCodeScannerReaderScan({
+  const PDFScanner({
     super.key,
     required this.locator,
   });
@@ -60,7 +67,7 @@ class QrCodeScannerReaderScan extends StatelessWidget {
           navigatorKey: locator.navigatorKey,
           home: const SplashScreen(),
           debugShowCheckedModeBanner: false,
-          title: 'Qr code scanner - reader scan',
+          title: 'PDFScanSmart',
           theme: lightThemeData,
           onGenerateRoute: AppRoutes.onGenerateRoute,
         ),

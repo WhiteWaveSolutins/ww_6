@@ -15,7 +15,7 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
   int page = 0;
-  int onboardingCount = 4;
+  int onboardingCount = 3;
 
   @override
   Widget build(BuildContext context) {
